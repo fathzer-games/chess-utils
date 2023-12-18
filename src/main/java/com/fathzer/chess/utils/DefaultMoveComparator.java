@@ -2,13 +2,22 @@ package com.fathzer.chess.utils;
 
 import java.util.Comparator;
 
+import com.fathzer.chess.utils.adapters.MoveAdapter;
 import com.fathzer.chess.utils.adapters.PieceEvaluator;
 
 /** A move comparator that considers a catch is better than other moves and taking a high value piece with a small value piece is better than the opposite.
+ * @param <M> The type of moves
+ * @param <B> The type of chess board
+ * @param <P> The class of a Piece
  */
-public abstract class DefaultMoveComparator<M, B, P> implements Comparator<M>, PieceEvaluator<P> {
+public abstract class DefaultMoveComparator<M, B, P> implements Comparator<M>, PieceEvaluator<P>, MoveAdapter<M, B, P> {
+	/** The chess board on which the comparison are made.
+	 */
 	protected final B board;
 	
+	/** Constructor.
+	 * @param board The chess board on which the comparison is made.
+	 */
 	protected DefaultMoveComparator(B board) {
 		this.board = board;
 	}
@@ -19,20 +28,21 @@ public abstract class DefaultMoveComparator<M, B, P> implements Comparator<M>, P
 		return getMoveValue(m2) - getMoveValue(m1);
 	}
 
-	public int getMoveValue(M m) {
-		final P promotion = getPromotion(m);
+	/** Gets the value of a move.
+	 * @param move The move
+	 * @return a value for a move.
+	 * <br>The default implementation guarantees that the returned value is always &gt;=0, and &gt;0 for promotions and captures.
+	 */
+	public int getMoveValue(M move) {
+		final P promotion = getPromotion(board, move);
 		int value = isNone(promotion) ? 0 : (getValue(promotion)-1)*16;
-		final P captured = getCaptured(m);
+		final P captured = getCaptured(board, move);
 		if (isNone(captured)) {
 			return value;
 		} else {
 			value += getValue(captured)*16;
-			final P catching = getMoving(m);
+			final P catching = getMoving(board, move);
 			return value - getValue(catching);
 		}
 	}
-	
-	protected abstract P getMoving(M move);
-	protected abstract P getPromotion(M move);
-	protected abstract P getCaptured(M move);
 }

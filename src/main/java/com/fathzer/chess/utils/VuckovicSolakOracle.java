@@ -8,7 +8,7 @@ import com.fathzer.games.ai.time.RemainingMoveCountPredictor;
  * <br>A chess engine has to determine how much time it can spent searching the best move. This class is a ready to use implementation of the research mentioned above.
  * <br>In order to get the right results, the {@link PieceEvaluator#getValue(Object)} method should return the <a href="https://en.wikipedia.org/wiki/Chess_piece_relative_value">standard valuation of pieces</a>
  */
-public abstract class VuckovicSolakTimeManager<B, P> implements RemainingMoveCountPredictor<B>, PieceStreamer<B, P>, PieceEvaluator<P> {
+public abstract class VuckovicSolakOracle<B, P> implements RemainingMoveCountPredictor<B>, PieceStreamer<B, P>, PieceEvaluator<P> {
 	
 	@Override
 	public int getRemainingHalfMoves(B board) {
@@ -24,5 +24,9 @@ public abstract class VuckovicSolakTimeManager<B, P> implements RemainingMoveCou
 		return remainingMoves;
 	}
 	
+	/** Checks whether piece is not a king.
+	 * @param piece a piece
+	 * @return True if the piece is not a king.
+	 */
 	protected abstract boolean isNotKing(P piece);
 }
