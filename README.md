@@ -12,9 +12,9 @@ To implement a chess engine, you basically need the following:
 You can find a lot on the Internet (example: [chesslib](https://github.com/bhlangonijr/chesslib)).
 
 - An implementation of tree search algorithm like Negamax.  
-[games-core](https://github.com/fathzer-games/games-core) provides you with a generic game engine library. As it is not dedicated to a particular game, it does contain any things like evaluation functions.
+[games-core](https://github.com/fathzer-games/games-core) provides you with a generic game engine library. As it is not dedicated to a particular game, it does not contain any things like evaluation functions.
 
-- An evaluation function, an *a priori* evaluation of moves (usually, move generators does not sort moves, but it improves a lot tree search), and some other little things (example: An estimation of how many moves it remains before the end game, to implement a time management strategy).  
+- An evaluation function, an *a priori* comparator of moves (usually, move generators does not sort moves, but it improves a lot tree search), and some other little things (example: An estimation of how many moves it remains before the end game, to implement a time management strategy).  
 **This library provides you with some of these building blocks**.
 
 - Optionally, you will need to implement a communication protocol between your engine and a chess user interface.  
