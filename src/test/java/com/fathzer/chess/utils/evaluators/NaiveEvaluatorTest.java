@@ -1,16 +1,7 @@
 package com.fathzer.chess.utils.evaluators;
 
 import static com.fathzer.games.Color.WHITE;
-import static com.github.bhlangonijr.chesslib.Square.A6;
-import static com.github.bhlangonijr.chesslib.Square.B1;
-import static com.github.bhlangonijr.chesslib.Square.B3;
-import static com.github.bhlangonijr.chesslib.Square.B5;
-import static com.github.bhlangonijr.chesslib.Square.C7;
-import static com.github.bhlangonijr.chesslib.Square.D6;
-import static com.github.bhlangonijr.chesslib.Square.E8;
-import static com.github.bhlangonijr.chesslib.Square.F4;
-import static com.github.bhlangonijr.chesslib.Square.F8;
-import static com.github.bhlangonijr.chesslib.Square.G8;
+import static com.github.bhlangonijr.chesslib.Square.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -90,7 +81,7 @@ class NaiveEvaluatorTest {
 		// Capture from black
 		test.test(new Move(C7, D6), -100);
 		// No Capture from white
-		test.test(new Move(B1,B3), -100);
+		test.test(new Move(B1, C3), -100);
 		// Castling from black
 		test.test(new Move(E8, G8), -100);
 		// Unmake moves
