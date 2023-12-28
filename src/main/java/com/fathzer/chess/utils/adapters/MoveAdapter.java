@@ -1,33 +1,36 @@
 package com.fathzer.chess.utils.adapters;
 
+import com.fathzer.chess.utils.Pieces;
+
 /** A class that returns data about moves.
  * @param <M> The move type
  * @param <B> The type of chess board
- * @param <P> The class of pieces
  */
-public interface MoveAdapter<M, B, P> {
+public interface MoveAdapter<M, B> {
+	/** Tests whether white or black should make next move.
+	 * @param board The chess board
+	 * @return true if white should play, false if black should play
+	 */
+	boolean isWhiteToMove(B board);
+	
 	/** Get the moving piece.
 	 * @param board The board
 	 * @param move The move
-	 * @return a Piece
+	 * @return a piece index. See {@link Pieces} to learn which integer corresponds to which piece.
 	 */
-	P getMoving(B board, M move);
+	int getMovingPiece(B board, M move);
 	
 	/** Get the piece captured by the move.
 	 * @param board The board
 	 * @param move The move
-	 * @return a Piece or null.
-	 * <br>Please note that one can return null when no captured is made or a special P instance.
-	 * This library's classes uses {@link PieceEvaluator#isNone(Object)} to check if there's a capture or not.
+	 * @return a piece type index. See {@link Pieces} to learn which integer corresponds to which piece type.
 	 */
-	P getCaptured(B board, M move);
+	int getCapturedType(B board, M move);
 	
 	/** Get the promotion made by the move.
 	 * @param board The board
 	 * @param move The move
-	 * @return a Piece or null.
-	 * <br>Please note that one can return null when no captured is made or a special P instance.
-	 * This library's classes uses {@link PieceEvaluator#isNone(Object)} to check if there's a capture or not. 
+	 * @return a piece type index. See {@link Pieces} to learn which integer corresponds to which piece type.
 	 */
-	P getPromotion(B board, M move);
+	int getPromotionType(B board, M move);
 }

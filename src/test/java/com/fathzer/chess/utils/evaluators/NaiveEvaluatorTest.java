@@ -10,11 +10,10 @@ import com.fathzer.chess.utils.adapters.chesslib.ChessLibAdapter;
 import com.fathzer.games.Color;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.Piece;
-import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.move.Move;
 
 class NaiveEvaluatorTest {
-	private static class ChessLibNaiveEvaluator extends NaiveEvaluator<Move, Board, Side, Piece> implements ChessLibAdapter {
+	private static class ChessLibNaiveEvaluator extends NaiveEvaluator<Move, Board> implements ChessLibAdapter {
 		protected ChessLibNaiveEvaluator(Board board) {
 			super(board);
 		}
@@ -26,14 +25,14 @@ class NaiveEvaluatorTest {
 		@Override
 		public void setViewPoint(Color color) {
 			if (color==null) {
-				this.viewPoint = null;
+				this.viewPoint = 0;
 			} else {
-				this.viewPoint = color==WHITE ? Side.WHITE : Side.BLACK;
+				this.viewPoint = color==WHITE ? 1 : -1;
 			}
 		}
 
 		@Override
-		public NaiveEvaluator<Move, Board, Side, Piece> fork(int score) {
+		public NaiveEvaluator<Move, Board> fork(int score) {
 			return new ChessLibNaiveEvaluator(score);
 		}
 	}
@@ -125,4 +124,12 @@ class NaiveEvaluatorTest {
 		test.test(new Move(B1,B3), -100);
 		// Castling from black
 		test.test(new Move(E8, G8), 100);
-	}}
+	}
+	
+	@Test
+	void theBlackPromotionCase() {
+		ATest test = new ATest("8/4P1n1/8/5P2/8/QK5k/1P3p2/8 b - - 0 1", Color.WHITE, 800);
+		// En passant from white
+		test.test(new Move(F2, F1, Piece.BLACK_QUEEN), 0);
+	}
+}

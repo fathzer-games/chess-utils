@@ -1,8 +1,8 @@
 package com.fathzer.chess.utils.evaluators;
 
-import com.fathzer.chess.utils.adapters.ColorAdapter;
+import static com.fathzer.chess.utils.Pieces.getPoints;
+
 import com.fathzer.chess.utils.adapters.MoveAdapter;
-import com.fathzer.chess.utils.adapters.PieceEvaluator;
 import com.fathzer.chess.utils.adapters.PieceStreamer;
 import com.fathzer.games.ai.evaluation.Evaluator;
 import com.fathzer.games.util.Stack;
@@ -10,15 +10,13 @@ import com.fathzer.games.util.Stack;
 /** A naive <a href="https://www.chessprogramming.org/Incremental_Updates">incremental</a> evaluator that only uses the <a href="https://en.wikipedia.org/wiki/Chess_piece_relative_value">standard valuation of pieces</a>. 
  * @param <M> The type of moves
  * @param <B> The type of chess board
- * @param <C> The class of the color
- * @param <P> The class of a Piece
  */
-public abstract class NaiveEvaluator<M, B, C, P> implements Evaluator<M, B>, ColorAdapter<B,C,P>, MoveAdapter<M, B, P>, PieceStreamer<B, P>, PieceEvaluator<P> {
+public abstract class NaiveEvaluator<M, B> implements Evaluator<M, B>, MoveAdapter<M, B>, PieceStreamer<B> {
 	private final Stack<Integer> scores;
 	private int toCommit;
-	/** The evaluator point of view.
+	/** The evaluator point of view (1 for white, -1 for black, 0 for current player.
 	 */
-	protected C viewPoint;
+	protected int viewPoint;
 	
 	private NaiveEvaluator() {
 		this.scores = new Stack<>(null);
@@ -30,7 +28,7 @@ public abstract class NaiveEvaluator<M, B, C, P> implements Evaluator<M, B>, Col
 	 */
 	protected NaiveEvaluator(B board) {
 		this();
-		scores.set(getPieces(board).mapToInt(p -> isWhite(getColor(p))?getValue(p):-getValue(p)).sum());
+		scores.set(getPieces(board).mapToInt(p -> p>0?getPoints(p):-getPoints(-p)).sum());
 	}
 	
 	/** Constructor.
@@ -44,7 +42,7 @@ public abstract class NaiveEvaluator<M, B, C, P> implements Evaluator<M, B>, Col
 	@Override
 	public int evaluate(B board) {
 		int points = 100*scores.get();
-		if (!isWhite(viewPoint==null?getSideToMove(board):viewPoint)) {
+		if ((viewPoint==0 && !isWhiteToMove(board)) || viewPoint<0) {
 			points = -points;
 		}
 		return points;
@@ -54,26 +52,26 @@ public abstract class NaiveEvaluator<M, B, C, P> implements Evaluator<M, B>, Col
 	 * @param score The initial score.
 	 * @return a new evaluator of the same class as this, initialized with the score.
 	 */
-	public abstract NaiveEvaluator<M, B, C, P> fork(int score);
+	public abstract NaiveEvaluator<M, B> fork(int score);
 	
 	@Override
-	public NaiveEvaluator<M, B, C, P> fork() {
+	public NaiveEvaluator<M, B> fork() {
 		return fork(scores.get());
 	}
 
 	@Override
 	public void prepareMove(B board, M move) {
 		int increment = 0;
-        final P movingPiece = getMoving(board, move);
-        final P capturedPiece = getCaptured(board, move);
-        if (!isNone(capturedPiece)) {
-	        increment = getValue(capturedPiece);
+        final int capturedPiece = getCapturedType(board, move);
+        if (capturedPiece!=0) {
+	        increment = getPoints(capturedPiece);
         }
-        final P promotion = getPromotion(board, move);
-        if (!isNone(promotion)) {
-	        increment = increment + getValue(promotion)-getValue(movingPiece);
+        final int movingPiece = getMovingPiece(board, move);
+        final int promotion = getPromotionType(board, move);
+        if (promotion!=0) {
+	        increment = increment + getPoints(promotion)-getPoints(Math.abs(movingPiece));
         }
-		if (!isWhite(getColor(movingPiece))) {
+		if (movingPiece<0) {
 			increment = -increment;
 		}
 		toCommit = scores.get()+increment;
