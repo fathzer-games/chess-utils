@@ -7,15 +7,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibAdapter;
+import com.fathzer.chess.utils.adapters.chesslib.ChessLibMoveGenerator;
 import com.fathzer.games.Color;
+import com.fathzer.games.MoveGenerator.MoveConfidence;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.move.Move;
 
 class NaiveEvaluatorTest {
-	private static class ChessLibNaiveEvaluator extends NaiveEvaluator<Move, Board> implements ChessLibAdapter {
-		protected ChessLibNaiveEvaluator(Board board) {
-			super(board);
+	private static class ChessLibNaiveEvaluator extends NaiveEvaluator<Move, ChessLibMoveGenerator> implements ChessLibAdapter {
+		protected ChessLibNaiveEvaluator() {
+			super();
 		}
 		
 		private ChessLibNaiveEvaluator(int score) {
@@ -32,37 +34,38 @@ class NaiveEvaluatorTest {
 		}
 
 		@Override
-		public NaiveEvaluator<Move, Board> fork(int score) {
+		public NaiveEvaluator<Move, ChessLibMoveGenerator> fork(int score) {
 			return new ChessLibNaiveEvaluator(score);
 		}
 	}
 
 	private static class ATest {
 		private final ChessLibNaiveEvaluator eval;
-		private final Board mvg;
+		private final ChessLibMoveGenerator mvg;
 		
 		private ATest(String fen, Color viewPoint, int expectedEval) {
-			this.mvg = new Board();
-			mvg.loadFromFen(fen);
-			this.eval = new ChessLibNaiveEvaluator(mvg);
+			this.mvg = new ChessLibMoveGenerator(new Board());
+			mvg.getBoard().loadFromFen(fen);
+			this.eval = new ChessLibNaiveEvaluator();
+			this.eval.init(mvg);
 			eval.setViewPoint(viewPoint);
 			assertEquals(expectedEval, eval.evaluate(mvg));
 		}
 		
 		private void test(Move move, int expectedEval) {
 			eval.prepareMove(mvg, move);
-			assertTrue(mvg.doMove(move, true));
+			assertTrue(mvg.makeMove(move, MoveConfidence.UNSAFE));
 			eval.commitMove();
 			final int incEvaluation = eval.evaluate(mvg);
 			if (expectedEval!=incEvaluation) {
-				mvg.undoMove();
+				mvg.unmakeMove();
 				eval.unmakeMove();
 			}
-			assertEquals (expectedEval, incEvaluation, "Error for move "+move+" on "+mvg.getFen());
+			assertEquals (expectedEval, incEvaluation, "Error for move "+move+" on "+mvg.getBoard().getFen());
 		}
 		
 		private int unmakeMove() {
-			mvg.undoMove();
+			mvg.unmakeMove();
 			eval.unmakeMove();
 			return eval.evaluate(mvg);
 		}

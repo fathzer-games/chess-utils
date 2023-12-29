@@ -4,6 +4,7 @@ import static com.fathzer.chess.utils.Pieces.getPoints;
 
 import com.fathzer.chess.utils.adapters.MoveAdapter;
 import com.fathzer.chess.utils.adapters.PieceStreamer;
+import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.ai.evaluation.Evaluator;
 import com.fathzer.games.util.Stack;
 
@@ -11,24 +12,17 @@ import com.fathzer.games.util.Stack;
  * @param <M> The type of moves
  * @param <B> The type of chess board
  */
-public abstract class NaiveEvaluator<M, B> implements Evaluator<M, B>, MoveAdapter<M, B>, PieceStreamer<B> {
+public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> implements Evaluator<M, B>, MoveAdapter<M, B>, PieceStreamer<B> {
 	private final Stack<Integer> scores;
 	private int toCommit;
 	/** The evaluator point of view (1 for white, -1 for black, 0 for current player.
 	 */
 	protected int viewPoint;
 	
-	private NaiveEvaluator() {
-		this.scores = new Stack<>(null);
-	}
-	
-	/** Constructor.
-	 * @param board The board that will be evaluated.
-	 * <br>This board is only used to get the initial estimation.
+	/** Default constructor
 	 */
-	protected NaiveEvaluator(B board) {
-		this();
-		scores.set(getPieces(board).mapToInt(p -> p>0?getPoints(p):-getPoints(-p)).sum());
+	protected NaiveEvaluator() {
+		this.scores = new Stack<>(null);
 	}
 	
 	/** Constructor.
@@ -40,9 +34,15 @@ public abstract class NaiveEvaluator<M, B> implements Evaluator<M, B>, MoveAdapt
 	}
 		
 	@Override
+	public void init(B board) {
+		scores.clear();
+		scores.set(getPieces(board).mapToInt(p -> p>0?getPoints(p):-getPoints(-p)).sum());
+	}
+	
+	@Override
 	public int evaluate(B board) {
 		int points = 100*scores.get();
-		if ((viewPoint==0 && !isWhiteToMove(board)) || viewPoint<0) {
+		if ((viewPoint==0 && !board.isWhiteToMove()) || viewPoint<0) {
 			points = -points;
 		}
 		return points;

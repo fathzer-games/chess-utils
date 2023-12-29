@@ -7,12 +7,6 @@ import com.fathzer.chess.utils.Pieces;
  * @param <B> The type of chess board
  */
 public interface MoveAdapter<M, B> {
-	/** Tests whether white or black should make next move.
-	 * @param board The chess board
-	 * @return true if white should play, false if black should play
-	 */
-	boolean isWhiteToMove(B board);
-	
 	/** Get the moving piece.
 	 * @param board The board
 	 * @param move The move
