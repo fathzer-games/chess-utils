@@ -5,19 +5,15 @@ import static com.fathzer.chess.utils.Pieces.getPoints;
 import com.fathzer.chess.utils.adapters.MoveAdapter;
 import com.fathzer.chess.utils.adapters.PieceStreamer;
 import com.fathzer.games.MoveGenerator;
-import com.fathzer.games.ai.evaluation.Evaluator;
 import com.fathzer.games.util.Stack;
 
 /** A naive <a href="https://www.chessprogramming.org/Incremental_Updates">incremental</a> evaluator that only uses the <a href="https://en.wikipedia.org/wiki/Chess_piece_relative_value">standard valuation of pieces</a>. 
  * @param <M> The type of moves
  * @param <B> The type of chess board
  */
-public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> implements Evaluator<M, B>, MoveAdapter<M, B>, PieceStreamer<B> {
+public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements MoveAdapter<M, B>, PieceStreamer<B> {
 	private final Stack<Integer> scores;
 	private int toCommit;
-	/** The evaluator point of view (1 for white, -1 for black, 0 for current player.
-	 */
-	protected int viewPoint;
 	
 	/** Default constructor
 	 */

@@ -1,16 +1,15 @@
 package com.fathzer.chess.utils.evaluators;
 
-import static com.fathzer.games.Color.WHITE;
 import static com.github.bhlangonijr.chesslib.Square.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import com.fathzer.chess.test.utils.FENUtils;
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibAdapter;
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibMoveGenerator;
 import com.fathzer.games.Color;
 import com.fathzer.games.MoveGenerator.MoveConfidence;
-import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.move.Move;
 
@@ -25,15 +24,6 @@ class NaiveEvaluatorTest {
 		}
 
 		@Override
-		public void setViewPoint(Color color) {
-			if (color==null) {
-				this.viewPoint = 0;
-			} else {
-				this.viewPoint = color==WHITE ? 1 : -1;
-			}
-		}
-
-		@Override
 		public NaiveEvaluator<Move, ChessLibMoveGenerator> fork(int score) {
 			return new ChessLibNaiveEvaluator(score);
 		}
@@ -44,8 +34,7 @@ class NaiveEvaluatorTest {
 		private final ChessLibMoveGenerator mvg;
 		
 		private ATest(String fen, Color viewPoint, int expectedEval) {
-			this.mvg = new ChessLibMoveGenerator(new Board());
-			mvg.getBoard().loadFromFen(fen);
+			this.mvg = FENUtils.from(fen);
 			this.eval = new ChessLibNaiveEvaluator();
 			this.eval.init(mvg);
 			eval.setViewPoint(viewPoint);
