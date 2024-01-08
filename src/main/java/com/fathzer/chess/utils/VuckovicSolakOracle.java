@@ -2,17 +2,17 @@ package com.fathzer.chess.utils;
 
 import static com.fathzer.chess.utils.Pieces.*;
 
-import com.fathzer.chess.utils.adapters.PieceStreamer;
+import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 import com.fathzer.games.ai.time.RemainingMoveCountPredictor;
 
 /** A {@link RemainingMoveCountPredictor} that uses the function described in chapter 4 of <a href="http://facta.junis.ni.ac.rs/acar/acar200901/acar2009-07.pdf">Vuckovic and Solak paper</a>.
  * <br>A chess engine has to determine how much time it can spent searching the best move. This class is a ready to use implementation of the research mentioned above.
  */
-public abstract class VuckovicSolakOracle<B> implements RemainingMoveCountPredictor<B>, PieceStreamer<B> {
+public abstract class VuckovicSolakOracle<B> implements RemainingMoveCountPredictor<B>, BoardExplorerBuilder<B> {
 	
 	@Override
 	public int getRemainingHalfMoves(B board) {
-		final int points = getPieces(board).filter(i->i!=KING).mapToInt(Pieces::getPoints).sum();
+		final int points = getPieces(board).filter(i->i!=KING).map(p -> getPoints(Math.abs(p))).sum();
 		final int remainingMoves;
 		if (points<20) {
 			remainingMoves = points+10;

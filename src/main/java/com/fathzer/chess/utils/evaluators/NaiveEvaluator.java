@@ -3,7 +3,7 @@ package com.fathzer.chess.utils.evaluators;
 import static com.fathzer.chess.utils.Pieces.getPoints;
 
 import com.fathzer.chess.utils.adapters.MoveAdapter;
-import com.fathzer.chess.utils.adapters.PieceStreamer;
+import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.util.Stack;
 
@@ -11,7 +11,7 @@ import com.fathzer.games.util.Stack;
  * @param <M> The type of moves
  * @param <B> The type of chess board
  */
-public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements MoveAdapter<M, B>, PieceStreamer<B> {
+public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements MoveAdapter<M, B>, BoardExplorerBuilder<B> {
 	private final Stack<Integer> scores;
 	private int toCommit;
 	
@@ -32,7 +32,7 @@ public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> extends Abst
 	@Override
 	public void init(B board) {
 		scores.clear();
-		scores.set(getPieces(board).mapToInt(p -> p>0?getPoints(p):-getPoints(-p)).sum());
+		scores.set(getPieces(board).map(p -> p>0?getPoints(p):-getPoints(-p)).sum());
 	}
 	
 	@Override

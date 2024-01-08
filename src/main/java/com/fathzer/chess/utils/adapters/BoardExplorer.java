@@ -5,7 +5,7 @@ import com.fathzer.chess.utils.Pieces;
 /** A class that allows to browse board content.
  */
 public interface BoardExplorer {
-	/** Moves to next piece
+	/** Moves to next piece.
 	 * @return false if there's no more pieces
 	 */
 	boolean next();

@@ -1,22 +1,21 @@
 package com.fathzer.chess.utils.adapters.chesslib;
 
 import static com.fathzer.chess.utils.Pieces.*;
-import static com.fathzer.chess.utils.adapters.chesslib.BoardExplorerBuilder.*;
 
-import java.util.stream.Stream;
-
+import com.fathzer.chess.utils.adapters.BoardExplorer;
 import com.fathzer.chess.utils.adapters.MoveAdapter;
-import com.fathzer.chess.utils.adapters.PieceStreamer;
+import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.PieceType;
+import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 
-public interface ChessLibAdapter extends PieceStreamer<ChessLibMoveGenerator>, MoveAdapter<Move, ChessLibMoveGenerator> {
+public interface ChessLibAdapter extends BoardExplorerBuilder<ChessLibMoveGenerator>, MoveAdapter<Move, ChessLibMoveGenerator> {
 
 	@Override
-	default Stream<Integer> getPieces(ChessLibMoveGenerator board) {
-		return BoardExplorerBuilder.getPieces(board.getBoard());
+	default BoardExplorer getExplorer(ChessLibMoveGenerator board) {
+		return new ChessLibBoardExplorer(board.getBoard());
 	}
 
 	@Override
@@ -40,5 +39,14 @@ public interface ChessLibAdapter extends PieceStreamer<ChessLibMoveGenerator>, M
 	@Override
 	default int getPromotionType(ChessLibMoveGenerator board, Move move) {
 		return fromPieceType(move.getPromotion().getPieceType());
+	}
+	
+	private static int fromPieceType(PieceType type) {
+		return type==null ? 0 : type.ordinal()+1;
+	}
+	
+	private static int toPiece(Piece piece) {
+		final int p = fromPieceType(piece.getPieceType());
+		return piece.getPieceSide()==Side.WHITE ? p : -p;
 	}
 }
