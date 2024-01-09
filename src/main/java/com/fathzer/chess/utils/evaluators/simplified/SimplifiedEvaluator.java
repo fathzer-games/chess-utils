@@ -1,12 +1,12 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
 import com.fathzer.chess.utils.adapters.BoardExplorer;
-import com.fathzer.chess.utils.evaluators.AbstractEvaluator;
 
 import static com.fathzer.chess.utils.Pieces.*;
 
 import com.fathzer.chess.utils.Pieces;
 import com.fathzer.games.MoveGenerator;
+import com.fathzer.games.ai.evaluation.AbstractEvaluator;
 
 /** The simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
  * <br>This only work with 8*8 games

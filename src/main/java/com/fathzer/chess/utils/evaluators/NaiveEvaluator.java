@@ -5,6 +5,7 @@ import static com.fathzer.chess.utils.Pieces.getPoints;
 import com.fathzer.chess.utils.adapters.MoveAdapter;
 import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 import com.fathzer.games.MoveGenerator;
+import com.fathzer.games.ai.evaluation.AbstractEvaluator;
 import com.fathzer.games.util.Stack;
 
 /** A naive <a href="https://www.chessprogramming.org/Incremental_Updates">incremental</a> evaluator that only uses the <a href="https://en.wikipedia.org/wiki/Chess_piece_relative_value">standard valuation of pieces</a>. 
