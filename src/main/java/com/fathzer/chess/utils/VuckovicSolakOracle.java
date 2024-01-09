@@ -12,7 +12,7 @@ public abstract class VuckovicSolakOracle<B> implements RemainingMoveCountPredic
 	
 	@Override
 	public int getRemainingHalfMoves(B board) {
-		final int points = getPieces(board).filter(i->i!=KING).map(p -> getPoints(Math.abs(p))).sum();
+		final int points = getPieces(board).map(Math::abs).filter(t->t!=KING).map(Pieces::getPoints).sum();
 		final int remainingMoves;
 		if (points<20) {
 			remainingMoves = points+10;
