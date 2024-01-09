@@ -25,9 +25,9 @@ class SimplifiedEvaluatorTest {
 	void test() {
 		ChessLibMoveGenerator board = new ChessLibMoveGenerator(new Board());
 		SimplifiedEvaluator<Move, ChessLibMoveGenerator> ev = new MyEval();
-		assertEquals(0, ev.getPoints(board));
+		assertEquals(0, ev.evaluateAsWhite(board));
 		board = FENUtils.from("3k4/8/8/3Pp3/8/8/8/4K3 w - - 0 1");
-		assertEquals(5, ev.getPoints(board));
+		assertEquals(5, ev.evaluateAsWhite(board));
 		
 		testVerticalSymetry(1, "pawn");
 		testVerticalSymetry(2, "knight");
@@ -36,10 +36,10 @@ class SimplifiedEvaluatorTest {
 		
 		// Pawel's suggestion with white queen at b3
 		board = FENUtils.from("rnbqkbnr/pp1ppppp/8/8/8/1Q6/PP1PPPPP/RNB1KBNR w KQkq - 0 1");
-		assertEquals(10, ev.getPoints(board));
+		assertEquals(10, ev.evaluateAsWhite(board));
 		// Pawel's suggestion with both queen's at b3 and c7
 		board = FENUtils.from("rnb1kbnr/ppqppppp/8/8/8/1Q6/PP1PPPPP/RNB1KBNR w KQkq - 0 1");
-		assertEquals(0, ev.getPoints(board));
+		assertEquals(0, ev.evaluateAsWhite(board));
 		
 	}
 	

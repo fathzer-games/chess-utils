@@ -36,17 +36,13 @@ public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> extends Abst
 	}
 	
 	@Override
-	public int evaluate(B board) {
-		int points = 100*scores.get();
-		if ((viewPoint==0 && !board.isWhiteToMove()) || viewPoint<0) {
-			points = -points;
-		}
-		return points;
+	public int evaluateAsWhite(B board) {
+		return 100*scores.get();
 	}
 	
 	/** Creates a new instance initialized with a score.
 	 * @param score The initial score.
-	 * @return a new evaluator of the same class as this, initialized with the score.
+	 * @return a new evaluator of the same class as this, this the same view point, and initialized with the score.
 	 */
 	public abstract NaiveEvaluator<M, B> fork(int score);
 	

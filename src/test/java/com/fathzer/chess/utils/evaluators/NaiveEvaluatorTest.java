@@ -10,6 +10,7 @@ import com.fathzer.chess.utils.adapters.chesslib.ChessLibAdapter;
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibMoveGenerator;
 import com.fathzer.games.Color;
 import com.fathzer.games.MoveGenerator.MoveConfidence;
+import com.fathzer.games.ai.evaluation.Evaluator;
 import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.move.Move;
 
@@ -25,8 +26,12 @@ class NaiveEvaluatorTest {
 
 		@Override
 		public NaiveEvaluator<Move, ChessLibMoveGenerator> fork(int score) {
-			return new ChessLibNaiveEvaluator(score);
+			final ChessLibNaiveEvaluator result = new ChessLibNaiveEvaluator(score);
+			result.viewPoint = this.viewPoint;
+			return result;
 		}
+		
+		
 	}
 
 	private static class ATest {
@@ -123,5 +128,25 @@ class NaiveEvaluatorTest {
 		ATest test = new ATest("8/4P1n1/8/5P2/8/QK5k/1P3p2/8 b - - 0 1", Color.WHITE, 800);
 		// En passant from white
 		test.test(new Move(F2, F1, Piece.BLACK_QUEEN), 0);
+	}
+	
+	@Test
+	void testFork() {
+		ChessLibMoveGenerator mvg = FENUtils.from("r2qkb1r/1ppb1ppp/4pn2/pP1p4/3P1B2/4P3/P1P2PPP/RN1QKBNR w KQkq a6 0 6");
+		Evaluator<Move, ChessLibMoveGenerator> eval = new ChessLibNaiveEvaluator();
+		eval.init(mvg);
+		eval.setViewPoint(Color.BLACK);
+		assertEquals(-300, eval.evaluate(mvg));
+		
+		ChessLibMoveGenerator mvg2 = (ChessLibMoveGenerator) mvg.fork();
+		Evaluator<Move, ChessLibMoveGenerator> eval2 = eval.fork();
+		assertEquals(-300, eval2.evaluate(mvg2));
+		// En passant from white
+		Move move = new Move(B5, A6);
+		eval2.prepareMove(mvg, move);
+		assertTrue(mvg2.makeMove(move, MoveConfidence.UNSAFE));
+		eval2.commitMove();
+		assertEquals(-400, eval2.evaluate(mvg2));
+		assertEquals(-300, eval.evaluate(mvg));
 	}
 }

@@ -88,20 +88,7 @@ public abstract class SimplifiedEvaluator<M, B extends MoveGenerator<M>> extends
 			-20,-10,-10, -5, -5,-10,-10,-20
 	}};
 	
-	@Override
-	public int evaluate(B board) {
-		int points = getPoints(board);
-		if (viewPoint<0 || (viewPoint==0 && !board.isWhiteToMove())) {
-			points = -points;
-		}
-		return points;
-	}
-
-	/** Gets the evaluation of a board, from the white point of view.
-	 * @param board The board to evaluate
-	 * @return an integer
-	 */
-	protected int getPoints(B board) {
+	protected int evaluateAsWhite(B board) {
 		final BoardExplorer exp = getExplorer(board);
 		int points = 0;
 		int whiteKingIndex=-1;
