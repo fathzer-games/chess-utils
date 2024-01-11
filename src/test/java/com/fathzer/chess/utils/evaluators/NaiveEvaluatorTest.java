@@ -15,7 +15,7 @@ import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.move.Move;
 
 class NaiveEvaluatorTest {
-	private static class ChessLibNaiveEvaluator extends NaiveEvaluator<Move, ChessLibMoveGenerator> implements ChessLibAdapter {
+	private static class ChessLibNaiveEvaluator extends AbstractNaiveEvaluator<Move, ChessLibMoveGenerator> implements ChessLibAdapter {
 		protected ChessLibNaiveEvaluator() {
 			super();
 		}
@@ -25,7 +25,7 @@ class NaiveEvaluatorTest {
 		}
 
 		@Override
-		public NaiveEvaluator<Move, ChessLibMoveGenerator> fork(int score) {
+		public AbstractNaiveEvaluator<Move, ChessLibMoveGenerator> fork(int score) {
 			final ChessLibNaiveEvaluator result = new ChessLibNaiveEvaluator(score);
 			result.viewPoint = this.viewPoint;
 			return result;

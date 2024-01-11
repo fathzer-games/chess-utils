@@ -1,6 +1,7 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
 import com.fathzer.chess.utils.adapters.BoardExplorer;
+import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 
 import static com.fathzer.chess.utils.Pieces.*;
 
@@ -11,7 +12,7 @@ import com.fathzer.games.ai.evaluation.AbstractEvaluator;
 /** The simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
  * <br>This only work with 8*8 games
  */
-public abstract class SimplifiedEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> {
+public abstract class AbstractSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements BoardExplorerBuilder<B> {
 	private static final int[] PIECE_VALUES = {0, 100, 320, 330, 500, 900, 20000};
 	private static final int[] KING_MID_GAME_EVAL = new int[] {
 			-30,-40,-40,-50,-50,-40,-40,-30,
@@ -121,12 +122,6 @@ public abstract class SimplifiedEvaluator<M, B extends MoveGenerator<M>> extends
 		return points;
 	}
 	
-	/** Gets a board explorer.
-	 * @param board The board to explore
-	 * @return A new board explorer
-	 */
-	protected abstract BoardExplorer getExplorer(B board);
-
 	private static int getPositionValue(int[] positionMap, int index, boolean black) {
 		if (black) {
 			final int row = 7 - index/8;

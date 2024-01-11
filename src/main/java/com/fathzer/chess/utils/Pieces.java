@@ -14,7 +14,7 @@ package com.fathzer.chess.utils;
  * is the piece's type identifier. White pieces have a positive id, black ones have
  * a negative one. 
  */
-public abstract class Pieces {
+public final class Pieces {
 	/** The standard number of points associated to pieces (or empty cell).
 	 * <br>The piece types order is empty, pawn, knight, bishop, rook, queen, king 
 	 */

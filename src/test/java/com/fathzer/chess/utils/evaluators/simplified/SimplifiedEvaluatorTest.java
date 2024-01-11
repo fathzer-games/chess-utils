@@ -14,9 +14,9 @@ import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.move.Move;
 
 class SimplifiedEvaluatorTest {
-	private static class MyEval extends SimplifiedEvaluator<Move, ChessLibMoveGenerator> {
+	private static class MyEval extends AbstractSimplifiedEvaluator<Move, ChessLibMoveGenerator> {
 		@Override
-		protected BoardExplorer getExplorer(ChessLibMoveGenerator board) {
+		public BoardExplorer getExplorer(ChessLibMoveGenerator board) {
 			return new ChessLibBoardExplorer(board.getBoard());
 		}
 	}
@@ -24,7 +24,7 @@ class SimplifiedEvaluatorTest {
 	@Test
 	void test() {
 		ChessLibMoveGenerator board = new ChessLibMoveGenerator(new Board());
-		SimplifiedEvaluator<Move, ChessLibMoveGenerator> ev = new MyEval();
+		AbstractSimplifiedEvaluator<Move, ChessLibMoveGenerator> ev = new MyEval();
 		assertEquals(0, ev.evaluateAsWhite(board));
 		board = FENUtils.from("3k4/8/8/3Pp3/8/8/8/4K3 w - - 0 1");
 		assertEquals(5, ev.evaluateAsWhite(board));
@@ -44,7 +44,7 @@ class SimplifiedEvaluatorTest {
 	}
 	
 	private void testVerticalSymetry(int pieceKind, String name) {
-		testVerticalSymetry(name, i -> SimplifiedEvaluator.getPositionValue(pieceKind, i));
+		testVerticalSymetry(name, i -> AbstractSimplifiedEvaluator.getPositionValue(pieceKind, i));
 }
 
 	private void testVerticalSymetry(String wording, IntFunction<Integer> valueGetter) {

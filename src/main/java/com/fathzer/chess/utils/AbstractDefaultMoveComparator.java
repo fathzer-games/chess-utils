@@ -7,7 +7,7 @@ import com.fathzer.games.util.SelectiveComparator;
  * @param <M> The type of moves
  * @param <B> The type of chess board
  */
-public abstract class DefaultMoveComparator<M, B> implements SelectiveComparator<M>, MoveAdapter<M, B> {
+public abstract class AbstractDefaultMoveComparator<M, B> implements SelectiveComparator<M>, MoveAdapter<M, B> {
 	/** The chess board on which the comparison are made.
 	 */
 	protected final B board;
@@ -15,7 +15,7 @@ public abstract class DefaultMoveComparator<M, B> implements SelectiveComparator
 	/** Constructor.
 	 * @param board The chess board on which the comparison is made.
 	 */
-	protected DefaultMoveComparator(B board) {
+	protected AbstractDefaultMoveComparator(B board) {
 		this.board = board;
 	}
 	

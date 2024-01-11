@@ -12,20 +12,20 @@ import com.fathzer.games.util.Stack;
  * @param <M> The type of moves
  * @param <B> The type of chess board
  */
-public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements MoveAdapter<M, B>, BoardExplorerBuilder<B> {
+public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements MoveAdapter<M, B>, BoardExplorerBuilder<B> {
 	private final Stack<Integer> scores;
 	private int toCommit;
 	
 	/** Default constructor
 	 */
-	protected NaiveEvaluator() {
+	protected AbstractNaiveEvaluator() {
 		this.scores = new Stack<>(null);
 	}
 	
 	/** Constructor.
 	 * @param score The score to initialize the evaluator
 	 */
-	protected NaiveEvaluator(int score) {
+	protected AbstractNaiveEvaluator(int score) {
 		this.scores = new Stack<>(null);
 		scores.set(score);
 	}
@@ -45,10 +45,10 @@ public abstract class NaiveEvaluator<M, B extends MoveGenerator<M>> extends Abst
 	 * @param score The initial score.
 	 * @return a new evaluator of the same class as this, this the same view point, and initialized with the score.
 	 */
-	public abstract NaiveEvaluator<M, B> fork(int score);
+	public abstract AbstractNaiveEvaluator<M, B> fork(int score);
 	
 	@Override
-	public NaiveEvaluator<M, B> fork() {
+	public AbstractNaiveEvaluator<M, B> fork() {
 		return fork(scores.get());
 	}
 

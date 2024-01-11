@@ -10,7 +10,7 @@ import com.fathzer.chess.utils.adapters.chesslib.ChessLibMoveGenerator;
 import com.fathzer.games.ai.time.RemainingMoveCountPredictor;
 
 class VuckovicSolakOracleTest {
-	private static class MyOracle extends VuckovicSolakOracle<ChessLibMoveGenerator> implements ChessLibAdapter {
+	private static class MyOracle extends AbstractVuckovicSolakOracle<ChessLibMoveGenerator> implements ChessLibAdapter {
 		
 	}
 

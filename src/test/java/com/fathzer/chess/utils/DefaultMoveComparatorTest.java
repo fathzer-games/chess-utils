@@ -16,7 +16,7 @@ import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.move.Move;
 
 class DefaultMoveComparatorTest {
-	private static final class ChessLibDefaultMoveComparator extends DefaultMoveComparator<Move, ChessLibMoveGenerator> implements ChessLibAdapter {
+	private static final class ChessLibDefaultMoveComparator extends AbstractDefaultMoveComparator<Move, ChessLibMoveGenerator> implements ChessLibAdapter {
 		private ChessLibDefaultMoveComparator(ChessLibMoveGenerator board) {
 			super(board);
 		}
@@ -26,7 +26,7 @@ class DefaultMoveComparatorTest {
 	void test() {
 		final ChessLibMoveGenerator board = new ChessLibMoveGenerator(new Board());
 		board.getBoard().loadFromFen("Q2n4/4P3/8/5P2/8/qK3p1k/1P6/8 w - - 0 1");
-		final DefaultMoveComparator<Move, ChessLibMoveGenerator> cmp = new ChessLibDefaultMoveComparator(board);
+		final AbstractDefaultMoveComparator<Move, ChessLibMoveGenerator> cmp = new ChessLibDefaultMoveComparator(board);
 		final Move queenPawnCatch = new Move(A8, F3);
 		final Move queenQueenCatch = new Move(A8, A3);
 		final Move kingCatch = new Move(B3, A3);
