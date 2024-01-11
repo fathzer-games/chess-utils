@@ -8,11 +8,12 @@ import static com.fathzer.chess.utils.Pieces.*;
 import com.fathzer.chess.utils.Pieces;
 import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.ai.evaluation.AbstractEvaluator;
+import com.fathzer.games.ai.evaluation.StaticEvaluator;
 
 /** The simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
  * <br>This only work with 8*8 games
  */
-public abstract class AbstractSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements BoardExplorerBuilder<B> {
+public abstract class AbstractSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements StaticEvaluator<M,B>, BoardExplorerBuilder<B> {
 	private static final int[] PIECE_VALUES = {0, 100, 320, 330, 500, 900, 20000};
 	private static final int[] KING_MID_GAME_EVAL = new int[] {
 			-30,-40,-40,-50,-50,-40,-40,-30,

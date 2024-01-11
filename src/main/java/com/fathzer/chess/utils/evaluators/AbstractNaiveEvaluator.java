@@ -6,13 +6,14 @@ import com.fathzer.chess.utils.adapters.MoveAdapter;
 import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.ai.evaluation.AbstractEvaluator;
+import com.fathzer.games.ai.evaluation.Evaluator;
 import com.fathzer.games.util.Stack;
 
 /** A naive <a href="https://www.chessprogramming.org/Incremental_Updates">incremental</a> evaluator that only uses the <a href="https://en.wikipedia.org/wiki/Chess_piece_relative_value">standard valuation of pieces</a>. 
  * @param <M> The type of moves
  * @param <B> The type of chess board
  */
-public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements MoveAdapter<M, B>, BoardExplorerBuilder<B> {
+public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements Evaluator<M, B>, MoveAdapter<M, B>, BoardExplorerBuilder<B> {
 	private final Stack<Integer> scores;
 	private int toCommit;
 	
