@@ -1,94 +1,52 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
+import static com.fathzer.chess.utils.Pieces.BISHOP;
+import static com.fathzer.chess.utils.Pieces.KING;
+import static com.fathzer.chess.utils.Pieces.KNIGHT;
+import static com.fathzer.chess.utils.Pieces.QUEEN;
+import static com.fathzer.chess.utils.Pieces.ROOK;
+
 import com.fathzer.chess.utils.adapters.BoardExplorer;
-import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
-
-import static com.fathzer.chess.utils.Pieces.*;
-
-import com.fathzer.chess.utils.Pieces;
 import com.fathzer.games.MoveGenerator;
-import com.fathzer.games.ai.evaluation.AbstractEvaluator;
 import com.fathzer.games.ai.evaluation.StaticEvaluator;
 
 /** The simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
  * <br>This only work with 8*8 games
  */
-public abstract class AbstractSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements StaticEvaluator<M,B>, BoardExplorerBuilder<B> {
-	private static final int[] PIECE_VALUES = {0, 100, 320, 330, 500, 900, 20000};
-	private static final int[] KING_MID_GAME_EVAL = new int[] {
-			-30,-40,-40,-50,-50,-40,-40,-30,
-			-30,-40,-40,-50,-50,-40,-40,-30,
-			-30,-40,-40,-50,-50,-40,-40,-30,
-			-30,-40,-40,-50,-50,-40,-40,-30,
-			-20,-30,-30,-40,-40,-30,-30,-20,
-			-10,-20,-20,-20,-20,-20,-20,-10,
-			 20, 20,  0,  0,  0,  0, 20, 20,
-			 20, 30, 10,  0,  0, 10, 30, 20};
+public abstract class AbstractSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends SimplifiedEvaluatorBase<M, B> implements StaticEvaluator<M,B> {
+	static class PhaseDetector {
+		private boolean blackQueen = false;
+		private boolean whiteQueen = false;
+		private boolean whiteRook = false;
+		private boolean blackRook = false;
+		private int whiteMinor = 0;
+		private int blackMinor = 0;
+		
+		public void add(int piece) {
+			switch (piece) {
+				case -QUEEN : blackQueen=true; break;
+				case QUEEN : whiteQueen=true; break;
+				case -ROOK : blackRook=true; break;
+				case ROOK : whiteRook=true; break;
+				case -BISHOP : blackMinor++; break;
+				case -KNIGHT : blackMinor++; break;
+				case BISHOP : whiteMinor++; break;
+				case KNIGHT : whiteMinor++; break;
+			default:
+				break;
+			}
+		}
 
-	private static final int[] KING_END_GAME_EVAL = new int[] {
-			-50,-40,-30,-20,-20,-30,-40,-50,
-			-30,-20,-10,  0,  0,-10,-20,-30,
-			-30,-10, 20, 30, 30, 20,-10,-30,
-			-30,-10, 30, 40, 40, 30,-10,-30,
-			-30,-10, 30, 40, 40, 30,-10,-30,
-			-30,-10, 20, 30, 30, 20,-10,-30,
-			-30,-30,  0,  0,  0,  0,-30,-30,
-			-50,-30,-30,-30,-30,-30,-30,-50};
-	
-	private static final int [][] PIECE_POSITION_VALUES = new int[][] {
-		// Just to have index equals to piece type codes
-		new int[0],
-		// PAWN
-		new int[] {
-			0,  0,  0,  0,  0,  0,  0,  0,
-			50, 50, 50, 50, 50, 50, 50, 50,
-			10, 10, 20, 30, 30, 20, 10, 10,
-			 5,  5, 10, 25, 25, 10,  5,  5,
-			 0,  0,  0, 20, 20,  0,  0,  0,
-			 5, -5,-10,  0,  0,-10, -5,  5,
-			 5, 10, 10,-20,-20, 10, 10,  5,
-			 0,  0,  0,  0,  0,  0,  0,  0},
-		// KNIGHT
-		new int[] {
-			-50,-40,-30,-30,-30,-30,-40,-50,
-			-40,-20,  0,  0,  0,  0,-20,-40,
-			-30,  0, 10, 15, 15, 10,  0,-30,
-			-30,  5, 15, 20, 20, 15,  5,-30,
-			-30,  0, 15, 20, 20, 15,  0,-30,
-			-30,  5, 10, 15, 15, 10,  5,-30,
-			-40,-20,  0,  5,  5,  0,-20,-40,
-			-50,-40,-30,-30,-30,-30,-40,-50},
-		// BISHOP
-		new int[] {
-			-20,-10,-10,-10,-10,-10,-10,-20,
-			-10,  0,  0,  0,  0,  0,  0,-10,
-			-10,  0,  5, 10, 10,  5,  0,-10,
-			-10,  5,  5, 10, 10,  5,  5,-10,
-			-10,  0, 10, 10, 10, 10,  0,-10,
-			-10, 10, 10, 10, 10, 10, 10,-10,
-			-10,  5,  0,  0,  0,  0,  5,-10,
-			-20,-10,-10,-10,-10,-10,-10,-20},
-		// ROOK
-		new int[] {
-			  0,  0,  0,  0,  0,  0,  0,  0,
-			  5, 10, 10, 10, 10, 10, 10,  5,
-			 -5,  0,  0,  0,  0,  0,  0, -5,
-			 -5,  0,  0,  0,  0,  0,  0, -5,
-			 -5,  0,  0,  0,  0,  0,  0, -5,
-			 -5,  0,  0,  0,  0,  0,  0, -5,
-			 -5,  0,  0,  0,  0,  0,  0, -5,
-			  0,  0,  0,  5,  5,  0,  0,  0},
-		// QUEEN
-		new int[] {
-			-20,-10,-10, -5, -5,-10,-10,-20,
-			-10,  0,  0,  0,  0,  0,  0,-10,
-			-10,  0,  5,  5,  5,  5,  0,-10,
-			 -5,  0,  5,  5,  5,  5,  0, -5,
-			  0,  0,  5,  5,  5,  5,  0, -5,
-			-10,  5,  5,  5,  5,  5,  0,-10,
-			-10,  0,  5,  0,  0,  0,  0,-10,
-			-20,-10,-10, -5, -5,-10,-10,-20
-	}};
+		public Phase getPhase() {
+			if (!blackQueen && !whiteQueen) {
+				return Phase.END_GAME;
+			}
+			if ((blackQueen && (blackRook || blackMinor>1)) || (whiteQueen && (whiteRook || whiteMinor>1))) {
+				return Phase.MIDDLE_GAME;
+			}
+			return Phase.END_GAME;
+		}
+	}
 	
 	protected int evaluateAsWhite(B board) {
 		final BoardExplorer exp = getExplorer(board);
@@ -103,13 +61,12 @@ public abstract class AbstractSimplifiedEvaluator<M, B extends MoveGenerator<M>>
 			final int index = exp.getIndex();
 			final boolean isBlack = p<0;
 			if (kind!=KING) {
-				int inc = PIECE_VALUES[kind];
-				final int[] positionMap = PIECE_POSITION_VALUES[kind];
-				inc += getPositionValue(positionMap, index, isBlack);
-				if (p>0) {
-					points += inc;
-				} else {
+				int inc = getRawValue(kind);
+				inc += getPositionValue(kind, isBlack, index);
+				if (isBlack) {
 					points -= inc;
+				} else {
+					points += inc;
 				}
 			} else if (isBlack) {
 				blackKingIndex = index;
@@ -117,27 +74,6 @@ public abstract class AbstractSimplifiedEvaluator<M, B extends MoveGenerator<M>>
 				whiteKingIndex = index;
 			}
 		} while (exp.next());
-		final int[] kingMap = phaseDetector.getPhase()==Phase.MIDDLE_GAME ? KING_MID_GAME_EVAL : KING_END_GAME_EVAL;
-		points += getPositionValue(kingMap, whiteKingIndex, false); 
-		points -= getPositionValue(kingMap, blackKingIndex, true); 
-		return points;
-	}
-	
-	private static int getPositionValue(int[] positionMap, int index, boolean black) {
-		if (black) {
-			final int row = 7 - index/8;
-			final int col = index%8;
-			index = row*8 + col;
-		}
-		return positionMap[index];
-	}
-	
-	/** Gets the position value associated with a type of piece and an index.
-	 * @param type The piece type as define in {@link Pieces}
-	 * @param index The index of the piece on the board as defined in {@link BoardExplorer}
-	 * @return an integer
-	 */
-	protected static int getPositionValue(int type, int index) {
-		return PIECE_POSITION_VALUES[type][index];
+		return points + getKingPositionsValue(whiteKingIndex, blackKingIndex, phaseDetector.getPhase());
 	}
 }
