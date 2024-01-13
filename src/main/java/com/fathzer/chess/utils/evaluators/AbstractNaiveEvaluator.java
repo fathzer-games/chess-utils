@@ -46,7 +46,7 @@ public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> exte
 	 * @param score The initial score.
 	 * @return a new evaluator of the same class as this, this the same view point, and initialized with the score.
 	 */
-	public abstract AbstractNaiveEvaluator<M, B> fork(int score);
+	protected abstract AbstractNaiveEvaluator<M, B> fork(int score);
 	
 	@Override
 	public AbstractNaiveEvaluator<M, B> fork() {

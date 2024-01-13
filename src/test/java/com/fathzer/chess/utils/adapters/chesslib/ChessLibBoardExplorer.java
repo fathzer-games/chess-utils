@@ -54,10 +54,12 @@ public class ChessLibBoardExplorer implements BoardExplorer {
 		return piece.getPieceSide()==Side.WHITE ? index : -index;
 	}
 
+	@Override
 	public int getIndex() {
 		return index;
 	}
 
+	@Override
 	public int getPiece() {
 		return piece;
 	}
