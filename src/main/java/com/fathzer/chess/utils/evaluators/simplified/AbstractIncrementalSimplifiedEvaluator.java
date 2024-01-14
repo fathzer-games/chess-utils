@@ -10,7 +10,6 @@ import java.util.function.Supplier;
 
 import com.fathzer.chess.utils.adapters.BoardExplorer;
 import com.fathzer.chess.utils.adapters.MoveData;
-import com.fathzer.chess.utils.evaluators.AbstractNaiveEvaluator;
 import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.ai.evaluation.Evaluator;
 import com.fathzer.games.util.Stack;
@@ -23,14 +22,14 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 	 */
 	static class State {
 		private int blackQueen;
+		private int blackRook;
+		private int blackMinor;
 		private int whiteQueen;
 		private int whiteRook;
-		private int blackRook;
 		private int whiteMinor;
-		private int blackMinor;
 		private int points;
-		int whiteKingIndex;
-		int blackKingIndex;
+		private int whiteKingIndex;
+		private int blackKingIndex;
 		
 		State() {
 			super();
@@ -128,6 +127,17 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 		this.states = new Stack<>(State::new);
 		this.moveData = get();
 	}
+	
+	/** Constructor.
+	 * @param state The state to initialize the evaluator
+	 */
+	protected AbstractIncrementalSimplifiedEvaluator(State state) {
+		this();
+		State other = new State();
+		state.copyTo(other);
+		states.set(state);
+	}
+
 
 	@Override
 	public Evaluator<M, B> fork() {
@@ -138,7 +148,7 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 	 * @param state The initial state.
 	 * @return a new evaluator of the same class as this, this the same view point, and initialized with the state.
 	 */
-	protected abstract AbstractNaiveEvaluator<M, B> fork(State state);
+	protected abstract AbstractIncrementalSimplifiedEvaluator<M, B> fork(State state);
 
 	@Override
 	public void init(B board) {
@@ -206,7 +216,7 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 			// Update the phase detector
 			toCommit.remove(isBlack ? captured : -captured);
 			// Then add its raw value and its position value
-			return getRawValue(captured) + getPositionValue(captured, isBlack, moveData.getCapturedIndex());
+			return getRawValue(captured) + getPositionValue(captured, !isBlack, moveData.getCapturedIndex());
 		} else {
 			return 0;
 		}
@@ -223,8 +233,13 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 		states.previous();
 	}
 
+	@Override
 	protected int evaluateAsWhite(B board) {
 		final State state = states.get();
 		return state.points + getKingPositionsValue(state.whiteKingIndex, state.blackKingIndex, state.getPhase());
+	}
+	
+	State getState() {
+		return states.get();
 	}
 }
