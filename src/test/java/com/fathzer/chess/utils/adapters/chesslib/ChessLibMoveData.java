@@ -62,15 +62,19 @@ public class ChessLibMoveData implements MoveData<Move, ChessLibMoveGenerator> {
 	}
 
 	@Override
-	public void update(Move move, ChessLibMoveGenerator board) {
+	public boolean update(Move move, ChessLibMoveGenerator board) {
 		this.movingIndex = move.getFrom();
 		this.movingPiece = board.getBoard().getPiece(movingIndex);
 		PieceType movingType = movingPiece.getPieceType();
-		if (movingType==KING) {
+		if (movingType==null) {
+			return false;
+		} else if (movingType==KING) {
 			this.promotion = null;
 			final GameContext context = board.getBoard().getContext();
 			if (context.isCastleMove(move)) {
 				final Side side = board.getBoard().getSideToMove();
+				this.captured = null;
+				this.movingDestination = move.getTo();
 				final Move rookMove = context.getRookCastleMove(side, context.isCastleMove(move) ? KING_SIDE :
                     QUEEN_SIDE);
 				this.castlingRookIndex = rookMove.getFrom();
@@ -90,6 +94,7 @@ public class ChessLibMoveData implements MoveData<Move, ChessLibMoveGenerator> {
 			if (movingType==PAWN && movingDestination==board.getBoard().getEnPassant()) {
 				this.captured = PAWN;
 				this.capturedIndex = board.getBoard().getEnPassantTarget();
+				this.promotion = null;
 			} else {
 				this.promotion = move.getPromotion().getPieceType();
 				this.captured = board.getBoard().getPiece(movingDestination).getPieceType();
@@ -98,6 +103,7 @@ public class ChessLibMoveData implements MoveData<Move, ChessLibMoveGenerator> {
 				}
 			}
 		}
+		return true;
 	}
 	
 	int getIndex(Square sq) {

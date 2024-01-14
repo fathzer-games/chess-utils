@@ -19,7 +19,9 @@ import com.fathzer.games.util.Stack;
  * <br>This only work with 8*8 games
  */
 public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends SimplifiedEvaluatorBase<M, B> implements Evaluator<M,B>, Supplier<MoveData<M,B>> {
-	public static class State {
+	/** The state of the evaluator.
+	 */
+	static class State {
 		private int blackQueen;
 		private int whiteQueen;
 		private int whiteRook;
@@ -133,7 +135,7 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 	}
 	
 	/** Creates a new instance initialized with current state that will become the initial state of created instance.
-	 * @param score The initial state.
+	 * @param state The initial state.
 	 * @return a new evaluator of the same class as this, this the same view point, and initialized with the state.
 	 */
 	protected abstract AbstractNaiveEvaluator<M, B> fork(State state);
@@ -147,8 +149,9 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 	@Override
 	public void prepareMove(B board, M move) {
 		buildToCommit();
-		moveData.update(move, board);
-		toCommit.points += getPointIncrement();
+		if (moveData.update(move, board)) {
+			toCommit.points += getPointIncrement();
+		}
 	}
 
 	private void buildToCommit() {

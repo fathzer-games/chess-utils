@@ -49,9 +49,13 @@ public interface MoveData<M, B> {
 	int getCastlingRookDestinationIndex();
 	
 	/** Updates this instance accordingly to a move.
-	 * <br>Calling this method on a move that is not pseudo-legal, may have unpredictable results. 
+	 * <br><b>Warning</b>: In some very rare (but not impossible case), this method can be called on an move that is not a pseudo-legal move.
+	 * Typically, it could happen on a move recovered from the transposition table, in case of 
+	 * <a href="https://www.chessprogramming.org/Zobrist_Hashing#Collisions">key collision</a> (same hash key for two different positions).
+	 * It is wise to manage this case and return false when it occurs. 
 	 * @param move The move
 	 * @param board The board on which the move occurs.
+	 * @return true if the update was done and false if the move seems inconsistent (in such a case, calling methods of the instance could have unpredictable results).
 	 */
-	void update(M move, B board);
+	boolean update(M move, B board);
 }
