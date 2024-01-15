@@ -133,5 +133,12 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		ev.prepareMove(board, mv);
 		ev.commitMove();
 		assertEquals(745+150-880-500, ev.evaluateAsWhite(board));
+		
+		// Test that illegal move does not throw exception
+		ev.unmakeMove();
+		mv = new Move(A7, A6);
+		ev.prepareMove(board, mv);
+		mv = new Move(H8, H1, Piece.BLACK_QUEEN);
+		ev.prepareMove(board, mv);
 	}
 }

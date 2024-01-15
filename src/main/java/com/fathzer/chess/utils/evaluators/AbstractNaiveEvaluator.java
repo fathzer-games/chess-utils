@@ -1,6 +1,6 @@
 package com.fathzer.chess.utils.evaluators;
 
-import static com.fathzer.chess.utils.Pieces.getPoints;
+import static com.fathzer.chess.utils.Pieces.*;
 
 import com.fathzer.chess.utils.adapters.MoveAdapter;
 import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
@@ -60,12 +60,11 @@ public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> exte
         if (capturedPiece!=0) {
 	        increment = getPoints(capturedPiece);
         }
-        final int movingPiece = getMovingPiece(board, move);
         final int promotion = getPromotionType(board, move);
         if (promotion!=0) {
-	        increment = increment + getPoints(promotion)-getPoints(Math.abs(movingPiece));
+	        increment = increment + getPoints(promotion)-getPoints(PAWN);
         }
-		if (movingPiece<0) {
+		if (!board.isWhiteToMove()) {
 			increment = -increment;
 		}
 		toCommit = scores.get()+increment;
