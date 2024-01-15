@@ -6,9 +6,9 @@ import static com.fathzer.chess.utils.evaluators.simplified.SimplifiedEvaluatorB
 import com.fathzer.chess.utils.adapters.BoardExplorer;
 import com.fathzer.chess.utils.adapters.MoveData;
 
-/** The state of the evaluator.
+/** The current state of a {@link AbstractIncrementalSimplifiedEvaluator}
  */
-class IncrementalState extends BasicState {
+public class IncrementalState extends BasicState {
 	IncrementalState() {
 		super();
 	}
@@ -17,34 +17,7 @@ class IncrementalState extends BasicState {
 		super(exp);
 	}
 
-	void remove(int piece) {
-		switch (piece) {
-			case -QUEEN : blackQueen--; break;
-			case QUEEN : whiteQueen--; break;
-			case -ROOK : blackRook--; break;
-			case ROOK : whiteRook--; break;
-			case -BISHOP : blackMinor--; break;
-			case -KNIGHT : blackMinor--; break;
-			case BISHOP : whiteMinor--; break;
-			case KNIGHT : whiteMinor--; break;
-		default:
-			break;
-		}
-	}
-	
-	void copyTo(IncrementalState other) {
-		other.blackQueen = blackQueen;
-		other.whiteQueen = whiteQueen;
-		other.whiteRook = whiteRook;
-		other.blackRook = blackRook;
-		other.whiteMinor = whiteMinor;
-		other.blackMinor = blackMinor;
-		other.points = points;
-		other.blackKingIndex = blackKingIndex;
-		other.whiteKingIndex = whiteKingIndex;
-	}
-	
-	void update(MoveData<?,?> move) {
+	public void update(MoveData<?,?> move) {
 		points += getIncrement(move);
 	}
 

@@ -52,8 +52,8 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 
 	@Override
 	public void prepareMove(B board, M move) {
-		buildToCommit();
 		if (moveData.update(move, board)) {
+			buildToCommit();
 			toCommit.update(moveData);
 		}
 	}

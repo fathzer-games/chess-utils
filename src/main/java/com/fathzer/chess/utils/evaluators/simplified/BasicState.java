@@ -1,28 +1,25 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
-import static com.fathzer.chess.utils.Pieces.BISHOP;
 import static com.fathzer.chess.utils.Pieces.KING;
-import static com.fathzer.chess.utils.Pieces.KNIGHT;
-import static com.fathzer.chess.utils.Pieces.QUEEN;
-import static com.fathzer.chess.utils.Pieces.ROOK;
 
 import com.fathzer.chess.utils.adapters.BoardExplorer;
 
 /** The state of the evaluator.
  */
-class BasicState {
-	protected int blackQueen;
-	protected int blackRook;
-	protected int blackMinor;
-	protected int whiteQueen;
-	protected int whiteRook;
-	protected int whiteMinor;
+class BasicState extends BasicPhaseDetector {
 	protected int points;
 	protected int whiteKingIndex;
 	protected int blackKingIndex;
 	
 	BasicState() {
 		super();
+	}
+	
+	public void copyTo(IncrementalState other) {
+		super.copyTo(other);
+		other.points = points;
+		other.blackKingIndex = blackKingIndex;
+		other.whiteKingIndex = whiteKingIndex;
 	}
 	
 	BasicState(BoardExplorer explorer) {
@@ -49,36 +46,7 @@ class BasicState {
 		} while (explorer.next());
 	}
 
-	protected void add(int piece) {
-		switch (piece) {
-			case -QUEEN : blackQueen++; break;
-			case QUEEN : whiteQueen++; break;
-			case -ROOK : blackRook++; break;
-			case ROOK : whiteRook++; break;
-			case -BISHOP : blackMinor++; break;
-			case -KNIGHT : blackMinor++; break;
-			case BISHOP : whiteMinor++; break;
-			case KNIGHT : whiteMinor++; break;
-		default:
-			break;
-		}
-	}
-	
-	protected Phase getPhase() {
-		if (blackQueen==0 && whiteQueen==0) {
-			return Phase.END_GAME;
-		}
-		if ((blackQueen!=0 && (blackRook!=0 || blackMinor>1)) || (whiteQueen!=0 && (whiteRook!=0 || whiteMinor>1))) {
-			return Phase.MIDDLE_GAME;
-		}
-		return Phase.END_GAME;
-	}
-
-	int getPoints() {
-		return points;
-	}
-
-	protected int evaluateAsWhite() {
+	public int evaluateAsWhite() {
 		return points + SimplifiedEvaluatorBase.getKingPositionsValue(whiteKingIndex, blackKingIndex, getPhase());
 	}
 }
