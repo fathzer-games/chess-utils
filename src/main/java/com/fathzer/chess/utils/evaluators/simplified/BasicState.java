@@ -6,16 +6,16 @@ import com.fathzer.chess.utils.adapters.BoardExplorer;
 
 /** The state of the evaluator.
  */
-class BasicState extends BasicPhaseDetector {
-	protected int points;
-	protected int whiteKingIndex;
-	protected int blackKingIndex;
+class BasicState extends FastPhaseDetector {
+	int points;
+	int whiteKingIndex;
+	int blackKingIndex;
 	
 	BasicState() {
 		super();
 	}
 	
-	public void copyTo(IncrementalState other) {
+	void copyTo(BasicState other) {
 		super.copyTo(other);
 		other.points = points;
 		other.blackKingIndex = blackKingIndex;
@@ -46,7 +46,7 @@ class BasicState extends BasicPhaseDetector {
 		} while (explorer.next());
 	}
 
-	public int evaluateAsWhite() {
+	int evaluateAsWhite() {
 		return points + SimplifiedEvaluatorBase.getKingPositionsValue(whiteKingIndex, blackKingIndex, getPhase());
 	}
 }

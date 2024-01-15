@@ -17,7 +17,7 @@ public class IncrementalState extends BasicState {
 		super(exp);
 	}
 
-	public void update(MoveData<?,?> move) {
+	void update(MoveData<?,?> move) {
 		points += getIncrement(move);
 	}
 

@@ -42,7 +42,9 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 
 		@Override
 		protected AbstractIncrementalSimplifiedEvaluator<Move, ChessLibMoveGenerator> fork(IncrementalState state) {
-			return new MyEval(state);
+			final MyEval result = new MyEval(state);
+			result.viewPoint = this.viewPoint;
+			return result;
 		}
 	}
 
@@ -104,8 +106,8 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		assertTrue(forkedMg.makeMove(mv, MoveConfidence.UNSAFE));
 		forked.commitMove();
 		int forkedExpected3 = forkedExpected2 + 880 - 150 - 30; // Warning, we change again the phase => king's positions values changes
-		assertEquals(forkedExpected3, forked.evaluateAsWhite(forkedMg));
 		assertEquals(MIDDLE_GAME, forked.getState().getPhase());
+		assertEquals(forkedExpected3, forked.evaluateAsWhite(forkedMg));
 		
 		forked.unmakeMove();
 		assertEquals(forkedExpected2, forked.evaluateAsWhite(forkedMg));
