@@ -19,7 +19,12 @@ class PhaseDetectorTest {
 		// Queen + bishop vs two rooks => end game	
 		assertEquals(END_GAME, getPhase("3qk3/7b/8/8/8/8/8/R3K2R w - - 0 1"));	
 		// 2 Queens => end game	
-		assertEquals(END_GAME, getPhase("3qk3/8/8/8/8/7Q/8/4K3 w - - 0 1"));	
+		assertEquals(END_GAME, getPhase("3qk3/8/8/8/8/7Q/8/4K3 w - - 0 1"));
+		// No queen => end game
+		assertEquals(END_GAME, getPhase("rnb1kbnr/ppp1pppp/8/8/8/8/PPP1PPPP/RNB1KBNR w KQkq - 0 1"));
+		
+		// Black queen has 2 minor pieces 
+		assertEquals(MIDDLE_GAME, getPhase("3k1q2/b1n5/8/3P4/8/8/8/4K3 w - - 0 1"));	
 	}	
 
 	private Phase getPhase(String fen) {	
