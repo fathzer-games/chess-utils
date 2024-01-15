@@ -1,10 +1,6 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
-import static com.fathzer.chess.utils.Pieces.BISHOP;
-import static com.fathzer.chess.utils.Pieces.KING;
-import static com.fathzer.chess.utils.Pieces.KNIGHT;
-import static com.fathzer.chess.utils.Pieces.QUEEN;
-import static com.fathzer.chess.utils.Pieces.ROOK;
+import static com.fathzer.chess.utils.Pieces.*;
 
 import java.util.function.Supplier;
 
@@ -14,8 +10,8 @@ import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.ai.evaluation.Evaluator;
 import com.fathzer.games.util.Stack;
 
-/** The simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
- * <br>This only work with 8*8 games
+/** An incremental implementation of the simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
+ * <br>This only works with 8*8 games
  */
 public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends SimplifiedEvaluatorBase<M, B> implements Evaluator<M,B>, Supplier<MoveData<M,B>> {
 	/** The state of the evaluator.
@@ -198,7 +194,7 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 			final int promoType = moveData.getPromotionType();
 			if (promoType!=0) {
 				// If promotion, add raw value points, update phase
-				inc += getRawValue(promoType)-1;
+				inc += getRawValue(promoType)-getRawValue(PAWN);
 				moving = promoType;
 				toCommit.add(isBlack ? -promoType : promoType);
 			}

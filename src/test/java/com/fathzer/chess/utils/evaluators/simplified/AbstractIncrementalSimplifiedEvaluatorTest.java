@@ -82,9 +82,9 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		forked.prepareMove(forkedMg, mv);
 		assertTrue(forkedMg.makeMove(mv, MoveConfidence.UNSAFE));
 		forked.commitMove();
-		int forkedExpected = expected+510+30; // 30 points because black king has a 30 points position penalty in END_GAME phase
+		int forkedExpected1 = expected+510+30; // 30 points because black king has a 30 points position penalty in END_GAME phase
 		assertEquals(END_GAME, forked.getState().getPhase());
-		assertEquals(forkedExpected, forked.evaluateAsWhite(forkedMg));
+		assertEquals(forkedExpected1, forked.evaluateAsWhite(forkedMg));
 		assertEquals(MIDDLE_GAME, ev.getState().getPhase()); // No side effect
 		assertEquals(expected, ev.evaluateAsWhite(board));
 		
@@ -93,7 +93,9 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		forked.prepareMove(forkedMg, mv);
 		assertTrue(forkedMg.makeMove(mv, MoveConfidence.UNSAFE));
 		forked.commitMove();
+		int forkedExpected2 = forkedExpected1 - 5;
 		assertEquals(END_GAME, forked.getState().getPhase());
+		assertEquals(forkedExpected2, forked.evaluateAsWhite(forkedMg));
 		assertEquals(MIDDLE_GAME, ev.getState().getPhase()); // Still no side effect
 		
 		// A promotion to a queen :-) => come back to Middle game
@@ -101,8 +103,33 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		forked.prepareMove(forkedMg, mv);
 		assertTrue(forkedMg.makeMove(mv, MoveConfidence.UNSAFE));
 		forked.commitMove();
+		int forkedExpected3 = forkedExpected2 + 880 - 150 - 30; // Warning, we change again the phase => king's positions values changes
+		assertEquals(forkedExpected3, forked.evaluateAsWhite(forkedMg));
 		assertEquals(MIDDLE_GAME, forked.getState().getPhase());
 		
-//		fail("Should also test evaluation values after stypid move and promotion");
+		forked.unmakeMove();
+		assertEquals(forkedExpected2, forked.evaluateAsWhite(forkedMg));
+		forked.unmakeMove();
+		assertEquals(forkedExpected1, forked.evaluateAsWhite(forkedMg));
+		forked.unmakeMove();
+		assertEquals(expected, forked.evaluateAsWhite(forkedMg));
+		
+		// Other tests on another board
+		board = FENUtils.from("4k2r/8/8/8/8/8/6p1/3QK2R b Kk - 0 1");
+		ev.init(board);
+		assertEquals(745, ev.evaluateAsWhite(board));
+		assertEquals(MIDDLE_GAME, ev.getState().getPhase());
+		// Test castling
+		mv = new Move(E8, G8);
+		ev.prepareMove(board, mv);
+		ev.commitMove();
+		assertEquals(745-30, ev.evaluateAsWhite(board));
+		
+		// Test promotion with capture
+		ev.unmakeMove();
+		mv = new Move(G2, H1, Piece.BLACK_QUEEN);
+		ev.prepareMove(board, mv);
+		ev.commitMove();
+		assertEquals(745+150-880-500, ev.evaluateAsWhite(board));
 	}
 }

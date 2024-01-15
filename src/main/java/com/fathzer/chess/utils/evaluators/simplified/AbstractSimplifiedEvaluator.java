@@ -11,7 +11,8 @@ import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.ai.evaluation.StaticEvaluator;
 
 /** The simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
- * <br>This only work with 8*8 games
+ * <br>This only works with 8*8 games
+ * <br>You should consider using {@link AbstractIncrementalSimplifiedEvaluator} which does the same evaluation ... faster.
  */
 public abstract class AbstractSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends SimplifiedEvaluatorBase<M, B> implements StaticEvaluator<M,B> {
 	static class PhaseDetector {
