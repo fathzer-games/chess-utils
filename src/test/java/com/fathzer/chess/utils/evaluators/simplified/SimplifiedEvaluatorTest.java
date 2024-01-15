@@ -12,7 +12,6 @@ import com.fathzer.chess.test.utils.FENUtils;
 import com.fathzer.chess.utils.adapters.BoardExplorer;
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibBoardExplorer;
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibMoveGenerator;
-import com.fathzer.chess.utils.evaluators.simplified.AbstractSimplifiedEvaluator.PhaseDetector;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.move.Move;
 
@@ -47,7 +46,7 @@ class SimplifiedEvaluatorTest {
 	}
 	
 	private void testVerticalSymetry(int pieceKind, String name) {
-		testVerticalSymetry(name, i -> AbstractSimplifiedEvaluator.getPositionValue(pieceKind, i));
+		testVerticalSymetry(name, i -> SimplifiedEvaluatorBase.getPositionValue(pieceKind, i));
 }
 
 	private void testVerticalSymetry(String wording, IntFunction<Integer> valueGetter) {
@@ -72,7 +71,7 @@ class SimplifiedEvaluatorTest {
 	}
 	
 	private Phase getPhase(String fen) {
-		final PhaseDetector pd = new PhaseDetector();
+		final BasicState pd = new BasicState();
 		final BoardExplorer explorer = new ChessLibBoardExplorer(FENUtils.from(fen).getBoard());
 		do {
 			final int p = explorer.getPiece();

@@ -26,7 +26,7 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 			super();
 		}
 
-		public MyEval(State state) {
+		public MyEval(IncrementalState state) {
 			super(state);
 		}
 
@@ -41,7 +41,7 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		}
 
 		@Override
-		protected AbstractIncrementalSimplifiedEvaluator<Move, ChessLibMoveGenerator> fork(State state) {
+		protected AbstractIncrementalSimplifiedEvaluator<Move, ChessLibMoveGenerator> fork(IncrementalState state) {
 			return new MyEval(state);
 		}
 	}
