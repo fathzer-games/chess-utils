@@ -154,9 +154,11 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		// Pawel's suggestion with white queen at b3	
 		ChessLibMoveGenerator board = FENUtils.from("rnbqkbnr/pp1ppppp/8/8/8/1Q6/PP1PPPPP/RNB1KBNR w KQkq - 0 1");
 		MyEval ev = new MyEval();
+		ev.init(board);
 		assertEquals(10, ev.evaluateAsWhite(board));	
 		// Pawel's suggestion with both queen's at b3 and c7	
-		board = FENUtils.from("rnb1kbnr/ppqppppp/8/8/8/1Q6/PP1PPPPP/RNB1KBNR w KQkq - 0 1");	
+		board = FENUtils.from("rnb1kbnr/ppqppppp/8/8/8/1Q6/PP1PPPPP/RNB1KBNR w KQkq - 0 1");
+		ev.init(board);
 		assertEquals(0, ev.evaluateAsWhite(board));	
 	}
 	
