@@ -1,13 +1,12 @@
 package com.fathzer.chess.utils;
 
-import com.fathzer.chess.utils.adapters.MoveAdapter;
 import com.fathzer.games.util.SelectiveComparator;
 
 /** A selective move comparator that considers a catch is better than other moves and taking a high value piece with a small value piece is better than the opposite and all other moves are equivalent.
  * @param <M> The type of moves
  * @param <B> The type of chess board
  */
-public abstract class AbstractDefaultMoveComparator<M, B> implements SelectiveComparator<M>, MoveAdapter<M, B> {
+public abstract class AbstractDefaultMoveComparator<M, B> implements SelectiveComparator<M> {
 	/** The chess board on which the comparison are made.
 	 */
 	protected final B board;
@@ -18,6 +17,28 @@ public abstract class AbstractDefaultMoveComparator<M, B> implements SelectiveCo
 	protected AbstractDefaultMoveComparator(B board) {
 		this.board = board;
 	}
+	
+	/** Get the moving piece.
+	 * @param board The board
+	 * @param move The move
+	 * @return a piece index. See {@link Pieces} to learn which integer corresponds to which piece.
+	 */
+	protected abstract int getMovingPiece(B board, M move);
+
+	/** Get the piece captured by the move.
+	 * @param board The board
+	 * @param move The move
+	 * @return a piece type index. See {@link Pieces} to learn which integer corresponds to which piece type.
+	 */
+	protected abstract int getCapturedType(B board, M move);
+	
+	/** Get the promotion made by the move.
+	 * @param board The board
+	 * @param move The move
+	 * @return a piece type index. See {@link Pieces} to learn which integer corresponds to which piece type.
+	 */
+	protected abstract int getPromotionType(B board, M move);
+
 	
 	@Override
 	public int compare(M o1, M o2) {

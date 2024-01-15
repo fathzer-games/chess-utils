@@ -5,13 +5,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import com.fathzer.chess.test.utils.FENUtils;
-import com.fathzer.chess.utils.adapters.chesslib.ChessLibAdapter;
+import com.fathzer.chess.utils.adapters.BoardExplorer;
+import com.fathzer.chess.utils.adapters.chesslib.ChessLibBoardExplorer;
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibMoveGenerator;
 import com.fathzer.games.ai.time.RemainingMoveCountPredictor;
 
 class VuckovicSolakOracleTest {
-	private static class MyOracle extends AbstractVuckovicSolakOracle<ChessLibMoveGenerator> implements ChessLibAdapter {
-		
+	private static class MyOracle extends AbstractVuckovicSolakOracle<ChessLibMoveGenerator> {
+		@Override
+		public BoardExplorer getExplorer(ChessLibMoveGenerator board) {
+			return new ChessLibBoardExplorer(board.getBoard());
+		}
 	}
 
 	@Test

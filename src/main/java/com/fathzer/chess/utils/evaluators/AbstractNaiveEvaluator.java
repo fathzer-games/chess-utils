@@ -2,7 +2,7 @@ package com.fathzer.chess.utils.evaluators;
 
 import static com.fathzer.chess.utils.Pieces.*;
 
-import com.fathzer.chess.utils.adapters.MoveAdapter;
+import com.fathzer.chess.utils.Pieces;
 import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.ai.evaluation.AbstractEvaluator;
@@ -13,7 +13,7 @@ import com.fathzer.games.util.Stack;
  * @param <M> The type of moves
  * @param <B> The type of chess board
  */
-public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements Evaluator<M, B>, MoveAdapter<M, B>, BoardExplorerBuilder<B> {
+public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements Evaluator<M, B>, BoardExplorerBuilder<B> {
 	private final Stack<Integer> scores;
 	private int toCommit;
 	
@@ -31,6 +31,20 @@ public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> exte
 		scores.set(score);
 	}
 		
+	/** Get the piece captured by the move.
+	 * @param board The board
+	 * @param move The move
+	 * @return a piece type index. See {@link Pieces} to learn which integer corresponds to which piece type.
+	 */
+	protected abstract int getCapturedType(B board, M move);
+	
+	/** Get the promotion made by the move.
+	 * @param board The board
+	 * @param move The move
+	 * @return a piece type index. See {@link Pieces} to learn which integer corresponds to which piece type.
+	 */
+	protected abstract int getPromotionType(B board, M move);
+
 	@Override
 	public void init(B board) {
 		scores.clear();

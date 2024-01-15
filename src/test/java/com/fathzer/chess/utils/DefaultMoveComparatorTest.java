@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-import com.fathzer.chess.utils.adapters.chesslib.ChessLibAdapter;
+import com.fathzer.chess.utils.adapters.chesslib.BasicMoveDecoder;
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibMoveGenerator;
 import com.fathzer.games.util.MoveList;
 import com.github.bhlangonijr.chesslib.Board;
@@ -16,9 +16,24 @@ import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.move.Move;
 
 class DefaultMoveComparatorTest {
-	private static final class ChessLibDefaultMoveComparator extends AbstractDefaultMoveComparator<Move, ChessLibMoveGenerator> implements ChessLibAdapter {
+	private static final class ChessLibDefaultMoveComparator extends AbstractDefaultMoveComparator<Move, ChessLibMoveGenerator> {
 		private ChessLibDefaultMoveComparator(ChessLibMoveGenerator board) {
 			super(board);
+		}
+
+		@Override
+		public int getMovingPiece(ChessLibMoveGenerator board, Move move) {
+			return BasicMoveDecoder.getMovingPiece(board, move);
+		}
+
+		@Override
+		public int getCapturedType(ChessLibMoveGenerator board, Move move) {
+			return BasicMoveDecoder.getCapturedType(board, move);
+		}
+
+		@Override
+		public int getPromotionType(ChessLibMoveGenerator board, Move move) {
+			return BasicMoveDecoder.getPromotionType(board, move);
 		}
 	}
 
