@@ -64,7 +64,9 @@ public abstract class AbstractNaiveEvaluator<M, B extends MoveGenerator<M>> exte
 	
 	@Override
 	public AbstractNaiveEvaluator<M, B> fork() {
-		return fork(scores.get());
+		final AbstractNaiveEvaluator<M, B> result = fork(scores.get());
+		result.viewPoint = this.viewPoint;
+		return result;
 	}
 
 	@Override

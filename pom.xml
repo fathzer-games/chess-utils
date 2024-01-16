@@ -1,6 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml><project xmlns="https://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.fathzer</groupId>
@@ -40,10 +41,12 @@
 			<version>0.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<!-- This dependency is used to compile the com.fathzer.chess.utils.test package.
+			 But is not intended to be a transitive dependency => It is optional -->
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.7.2</version>
-			<scope>test</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.github.bhlangonijr</groupId>

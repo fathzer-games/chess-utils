@@ -28,9 +28,7 @@ class NaiveEvaluatorTest {
 
 		@Override
 		public AbstractNaiveEvaluator<Move, ChessLibMoveGenerator> fork(int score) {
-			final ChessLibNaiveEvaluator result = new ChessLibNaiveEvaluator(score);
-			result.viewPoint = this.viewPoint;
-			return result;
+			return new ChessLibNaiveEvaluator(score);
 		}
 
 		@Override

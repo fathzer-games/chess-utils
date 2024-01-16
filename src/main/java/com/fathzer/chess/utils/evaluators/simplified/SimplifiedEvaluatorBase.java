@@ -84,15 +84,15 @@ abstract class SimplifiedEvaluatorBase<M, B extends MoveGenerator<M>> extends Ab
 			-20,-10,-10, -5, -5,-10,-10,-20
 	}};
 	
-	protected static int getPositionValue(int type, boolean black, int index) {
+	static int getPositionValue(int type, boolean black, int index) {
 		return getPositionValue(PIECE_POSITION_VALUES[type], index, black);
 	}
 	
-	protected static int getRawValue(int type) {
+	static int getRawValue(int type) {
 		return PIECE_VALUES[type];
 	}
 	
-	protected static int getKingPositionsValue(int whiteIndex, int blackIndex, Phase phase) {
+	static int getKingPositionsValue(int whiteIndex, int blackIndex, Phase phase) {
 		final int[] kingMap = phase==Phase.MIDDLE_GAME ? KING_MID_GAME_EVAL : KING_END_GAME_EVAL;
 		return getPositionValue(kingMap, whiteIndex, false) - getPositionValue(kingMap, blackIndex, true);
 	}
@@ -111,7 +111,7 @@ abstract class SimplifiedEvaluatorBase<M, B extends MoveGenerator<M>> extends Ab
 	 * @param index The index of the piece on the board as defined in {@link BoardExplorer}
 	 * @return an integer
 	 */
-	protected static int getPositionValue(int type, int index) {
+	static int getPositionValue(int type, int index) {
 		return PIECE_POSITION_VALUES[type][index];
 	}
 }

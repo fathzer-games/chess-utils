@@ -35,7 +35,9 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 
 	@Override
 	public Evaluator<M, B> fork() {
-		return fork(states.get());
+		final AbstractIncrementalSimplifiedEvaluator<M, B> result = fork(states.get());
+		result.viewPoint = this.viewPoint;
+		return result;
 	}
 	
 	/** Creates a new instance initialized with current state that will become the initial state of created instance.

@@ -44,9 +44,7 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 
 		@Override
 		protected AbstractIncrementalSimplifiedEvaluator<Move, ChessLibMoveGenerator> fork(IncrementalState state) {
-			final MyEval result = new MyEval(state);
-			result.viewPoint = this.viewPoint;
-			return result;
+			return new MyEval(state);
 		}
 	}
 
