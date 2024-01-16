@@ -18,4 +18,6 @@ You can find a lot on the Internet (example: [chesslib](https://github.com/bhlan
 **This library provides you with some of these building blocks**.
 
 - Optionally, you will need to implement a communication protocol between your engine and a chess user interface.  
-the [jchess-uci library](https://en.wikipedia.org/wiki/Universal_Chess_Interface) will help you to implement [UCI communication protocol]().
+the [jchess-uci library](https://en.wikipedia.org/wiki/Universal_Chess_Interface) will help you to implement [UCI communication protocol](https://www.wbec-ridderkerk.nl/html/UCIProtocol.html).
+
+Please have a look at [project Wiki](https://github.com/fathzer-games/chess-utils/wiki) to learn how to use it.

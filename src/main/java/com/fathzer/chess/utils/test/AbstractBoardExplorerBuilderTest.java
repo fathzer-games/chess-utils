@@ -17,10 +17,22 @@ import org.junit.jupiter.api.Test;
 import com.fathzer.chess.utils.adapters.BoardExplorer;
 import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 
-/** A generic test of {@link BoardExplorerBuilder}
+/** A generic test of {@link BoardExplorerBuilder} implementation
+ * <br>Have a look at <a href="https://github.com/fathzer-games/chess-utils/wiki/AbstractBoardExplorerBuilderTest">chess-utils wiki</a> to see an usage example.
  * @param <B> The type of chess board
 */
-public abstract class BoardExplorerBuilderTest<B> {
+public abstract class AbstractBoardExplorerBuilderTest<B> {
+	
+	/** Creates the builder to test.
+	 * @return The builder to test
+	 */
+	protected abstract BoardExplorerBuilder<B> getBuilder();
+	
+	/** Converts a <a href="https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation">fen representation</a> to a board.
+	 * @param fen The FEN to convert.
+	 * @return The board that corresponds to the <i>fen</i> argument.
+	 */
+	protected abstract B toBoard(String fen);
 
 	@Test
 	void test() {
@@ -44,17 +56,6 @@ public abstract class BoardExplorerBuilderTest<B> {
 		assertEquals(expected, map);
 		testStream(expected, builder.getPieces(board));
 	}
-	
-	/** Creates the builder to test.
-	 * @return The builder to test
-	 */
-	protected abstract BoardExplorerBuilder<B> getBuilder();
-	
-	/** Converts a <a href="https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation">fen representation</a> to a board.
-	 * @param fen The FEN to convert.
-	 * @return The board that corresponds to the <i>fen</i> argument.
-	 */
-	protected abstract B toBoard(String fen);
 
 	private Map<Integer, Integer> toMap(BoardExplorer exp) {
 		final Map<Integer, Integer> result = new HashMap<Integer, Integer>();

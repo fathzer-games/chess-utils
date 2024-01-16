@@ -3,9 +3,9 @@ package com.fathzer.chess.utils.adapters.chesslib;
 import com.fathzer.chess.test.utils.FENUtils;
 import com.fathzer.chess.utils.adapters.BoardExplorer;
 import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
-import com.fathzer.chess.utils.test.BoardExplorerBuilderTest;
+import com.fathzer.chess.utils.test.AbstractBoardExplorerBuilderTest;
 
-class ExplorerBuilderTest extends BoardExplorerBuilderTest<ChessLibMoveGenerator> implements BoardExplorerBuilder<ChessLibMoveGenerator>{
+class ExplorerBuilderTest extends AbstractBoardExplorerBuilderTest<ChessLibMoveGenerator> implements BoardExplorerBuilder<ChessLibMoveGenerator>{
 
 	@Override
 	protected BoardExplorerBuilder<ChessLibMoveGenerator> getBuilder() {
