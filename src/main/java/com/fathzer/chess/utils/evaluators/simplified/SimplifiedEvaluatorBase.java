@@ -5,9 +5,8 @@ import com.fathzer.chess.utils.adapters.BoardExplorerBuilder;
 
 import com.fathzer.chess.utils.Pieces;
 import com.fathzer.games.MoveGenerator;
-import com.fathzer.games.ai.evaluation.AbstractEvaluator;
 
-abstract class SimplifiedEvaluatorBase<M, B extends MoveGenerator<M>> extends AbstractEvaluator<M, B> implements BoardExplorerBuilder<B> {
+abstract class SimplifiedEvaluatorBase<M, B extends MoveGenerator<M>> implements BoardExplorerBuilder<B> {
 	private static final int[] PIECE_VALUES = {0, 100, 320, 330, 500, 900, 20000};
 	private static final int[] KING_MID_GAME_EVAL = new int[] {
 			-30,-40,-40,-50,-50,-40,-40,-30,
@@ -83,6 +82,10 @@ abstract class SimplifiedEvaluatorBase<M, B extends MoveGenerator<M>> extends Ab
 			-10,  0,  5,  0,  0,  0,  0,-10,
 			-20,-10,-10, -5, -5,-10,-10,-20
 	}};
+	
+	SimplifiedEvaluatorBase() {
+		super();
+	}
 	
 	static int getPositionValue(int type, boolean black, int index) {
 		return getPositionValue(PIECE_POSITION_VALUES[type], index, black);

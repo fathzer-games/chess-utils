@@ -5,12 +5,13 @@ import java.util.function.Supplier;
 import com.fathzer.chess.utils.adapters.MoveData;
 import com.fathzer.games.MoveGenerator;
 import com.fathzer.games.ai.evaluation.Evaluator;
+import com.fathzer.games.ai.evaluation.ZeroSumEvaluator;
 import com.fathzer.games.util.Stack;
 
 /** An incremental implementation of the simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
  * <br>This only works with 8*8 games and exactly one king per Color.
  */
-public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends SimplifiedEvaluatorBase<M, B> implements Evaluator<M,B>, Supplier<MoveData<M,B>> {
+public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends SimplifiedEvaluatorBase<M, B> implements ZeroSumEvaluator<M,B>, Supplier<MoveData<M,B>> {
 	private final Stack<IncrementalState> states;
 	private IncrementalState toCommit;
 	private MoveData<M, B> moveData;
@@ -35,9 +36,7 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 
 	@Override
 	public Evaluator<M, B> fork() {
-		final AbstractIncrementalSimplifiedEvaluator<M, B> result = fork(states.get());
-		result.viewPoint = this.viewPoint;
-		return result;
+		return fork(states.get());
 	}
 	
 	/** Creates a new instance initialized with current state that will become the initial state of created instance.
@@ -80,7 +79,7 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 	}
 
 	@Override
-	protected int evaluateAsWhite(B board) {
+	public int evaluateAsWhite(B board) {
 		return states.get().evaluateAsWhite();
 	}
 	
