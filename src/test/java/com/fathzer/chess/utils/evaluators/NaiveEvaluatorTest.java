@@ -6,9 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import com.fathzer.chess.test.utils.FENUtils;
-import com.fathzer.chess.utils.adapters.BoardExplorer;
-import com.fathzer.chess.utils.adapters.chesslib.BasicMoveDecoder;
-import com.fathzer.chess.utils.adapters.chesslib.ChessLibBoardExplorer;
 import com.fathzer.chess.utils.adapters.chesslib.ChessLibMoveGenerator;
 import com.fathzer.games.MoveGenerator.MoveConfidence;
 import com.fathzer.games.ai.evaluation.Evaluator;
@@ -16,36 +13,6 @@ import com.github.bhlangonijr.chesslib.Piece;
 import com.github.bhlangonijr.chesslib.move.Move;
 
 class NaiveEvaluatorTest {
-	private static class ChessLibNaiveEvaluator extends AbstractNaiveEvaluator<Move, ChessLibMoveGenerator> {
-		protected ChessLibNaiveEvaluator() {
-			super();
-		}
-		
-		private ChessLibNaiveEvaluator(int score) {
-			super(score);
-		}
-
-		@Override
-		public AbstractNaiveEvaluator<Move, ChessLibMoveGenerator> fork(int score) {
-			return new ChessLibNaiveEvaluator(score);
-		}
-
-		@Override
-		public BoardExplorer getExplorer(ChessLibMoveGenerator board) {
-			return new ChessLibBoardExplorer(board.getBoard());
-		}
-
-		@Override
-		protected int getCapturedType(ChessLibMoveGenerator board, Move move) {
-			return BasicMoveDecoder.getCapturedType(board, move);
-		}
-
-		@Override
-		protected int getPromotionType(ChessLibMoveGenerator board, Move move) {
-			return BasicMoveDecoder.getPromotionType(board, move);
-		}
-	}
-
 	private static class ATest {
 		private final ChessLibNaiveEvaluator eval;
 		private final ChessLibMoveGenerator mvg;
