@@ -18,26 +18,31 @@ public abstract class AbstractBasicQuiesceEvaluator<M, B extends MoveGenerator<M
 	}
 
 	@Override
-	public int evaluate(SearchContext<M, B> context, int alpha, int beta) {
-		return quiesce(context, alpha, beta, 0);
+	public int evaluate(SearchContext<M, B> context, int depth, int alpha, int beta) {
+		return quiesce(context, alpha, beta, depth, 0);
 	}
 
-	private int quiesce(SearchContext<M, B> context, int alpha, int beta, int quiesceDepth) {
+	private int quiesce(SearchContext<M, B> context, int alpha, int beta, int rootDepth, int quiesceDepth) {
 		final SearchStatistics statistics = context.getStatistics();
-		final int standPat = context.getEvaluator().evaluate(context.getGamePosition());
-		statistics.evaluationDone();
-		if (standPat>=beta) {
-			return beta;
-		}
-		if (alpha < standPat) {
-			alpha = standPat;
+		final boolean check = isCheck(context);
+		if (!check) {
+			final int standPat = context.getEvaluator().evaluate(context.getGamePosition());
+			statistics.evaluationDone();
+			if (standPat>=beta) {
+				return beta;
+			}
+			if (alpha < standPat) {
+				alpha = standPat;
+			}
 		}
 		final List<M> moves = getMoves(context, quiesceDepth);
     	statistics.movesGenerated(moves.size());
+    	boolean mate = check;
         for (M move : moves) {
             if (makeMove(context, move)) {
+            	mate = false;
                 statistics.movePlayed();
-	            final int score = -quiesce(context, -beta, -alpha, quiesceDepth+1);
+	            final int score = -quiesce(context, -beta, -alpha, rootDepth, quiesceDepth+1);
 	            context.unmakeMove();
 	            if (score >= beta) {
 	                return beta;
@@ -47,8 +52,10 @@ public abstract class AbstractBasicQuiesceEvaluator<M, B extends MoveGenerator<M
 	            }
             }
         }
-		return alpha;
+       	return mate ? -context.getEvaluator().getWinScore(rootDepth+quiesceDepth) : alpha;
 	}
+	
+	protected abstract boolean isCheck(SearchContext<M, B> context);
 	
 	/** Gets the list of quiesce moves.
 	 * @param context The search context (can be used to get the board)

@@ -9,7 +9,7 @@
 		<version>1.0.8</version>
 	</parent>
 	<artifactId>chess-utils</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 
 	<name>chess-utils</name>
 	<description>Some helpful piece of code to implement chess engines.</description>
@@ -22,8 +22,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<check-dependencies-java-version>11</check-dependencies-java-version>
-		<maven.compiler.release>11</maven.compiler.release>
+		<check-dependencies-java-version>17</check-dependencies-java-version>
+		<maven.compiler.release>17</maven.compiler.release>
 		<sonar.organization>fathzer-games</sonar.organization>
 	</properties>
 
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>com.fathzer</groupId>
 			<artifactId>games-core</artifactId>
-			<version>0.0.8-SNAPSHOT</version>
+			<version>0.0.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<!-- This dependency is used to compile the com.fathzer.chess.utils.test package.
