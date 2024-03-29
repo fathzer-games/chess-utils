@@ -38,14 +38,14 @@
 		<dependency>
 			<groupId>com.fathzer</groupId>
 			<artifactId>games-core</artifactId>
-			<version>0.0.9-SNAPSHOT</version>
+			<version>0.0.10-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<!-- This dependency is used to compile the com.fathzer.chess.utils.test package.
 			 But is not intended to be a transitive dependency => It is optional -->
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.7.2</version>
+			<version>5.10.2</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
