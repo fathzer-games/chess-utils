@@ -41,7 +41,7 @@ public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGe
 	
 	/** Creates a new instance initialized with current state that will become the initial state of created instance.
 	 * @param state The initial state.
-	 * @return a new evaluator of the same class as this, this the same view point, and initialized with the state.
+	 * @return a new evaluator of the same class as this, from the same view point, and initialized with the state.
 	 */
 	protected abstract AbstractIncrementalSimplifiedEvaluator<M, B> fork(IncrementalState state);
 
