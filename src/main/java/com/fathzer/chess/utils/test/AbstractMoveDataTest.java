@@ -102,5 +102,17 @@ public abstract class AbstractMoveDataTest<M, B> {
 		assertEquals(PAWN, mv.getCapturedType());
 		assertEquals(0, mv.getPromotionType());
 		assertEquals(-1, mv.getCastlingRookIndex());
+		
+		
+		// Queen side castling (bug 20241211)
+		mg = toBoard("r2qkb1r/1Ppb1ppp/4pn2/p2p4/3P1B2/2N1P3/P1P1QPPP/R3K2R w KQkq - 0 6");
+		assertTrue(mv.update(toMove(E1, C1, mg), mg));
+		assertEquals(KING, mv.getMovingPiece());
+		assertEquals(60, mv.getMovingIndex());
+		assertEquals(58, mv.getMovingDestination());
+		assertEquals(0, mv.getCapturedType());
+		assertEquals(0, mv.getPromotionType());
+		assertEquals(56, mv.getCastlingRookIndex());
+		assertEquals(59, mv.getCastlingRookDestinationIndex());
 	}
 }
