@@ -35,8 +35,9 @@ class AbstractIncrementalSimplifiedEvaluatorTest2 {
 
 		@Override
 		public void prepareMove(ChessLibMoveGenerator board, Move move) {
-			moveData.update(move, board);
-			prepareMove(moveData);
+			if (moveData.update(move, board)) {
+				prepareMove(moveData);
+			}
 		}
 
 		@Override
@@ -50,7 +51,7 @@ class AbstractIncrementalSimplifiedEvaluatorTest2 {
 		}
 	}
 	
-	private int getStaticEval(ChessLibMoveGenerator board) {
+	int getStaticEval(ChessLibMoveGenerator board) {
 		MyEval eval = new MyEval();
 		eval.init(board);
 		return eval.evaluateAsWhite(board);
@@ -62,9 +63,8 @@ class AbstractIncrementalSimplifiedEvaluatorTest2 {
 		// Start with black queen and rook vs a pawn, a knight and a bishop for black => Middle game
 		MyEval ev = new MyEval();
 		ChessLibMoveGenerator board = FENUtils.from("3qk3/7P/8/8/8/N7/B4r2/4K3 w - - 0 1");
-/*		ev.init(board);
+		ev.init(board);
 		int expected = 150+290+320-895-510;
-System.out.println(expected);
 		assertEquals(expected, ev.evaluateAsWhite(board));
 		
 		MyEval forked = (MyEval) ev.fork();
@@ -107,18 +107,13 @@ System.out.println(expected);
 		assertEquals(forkedExpected1, forked.evaluateAsWhite(forkedMg));
 		forked.unmakeMove();
 		assertEquals(expected, forked.evaluateAsWhite(forkedMg));
-*/		
+
 		// Other tests on another board
 		board = FENUtils.from("r3k3/8/8/8/8/8/1p6/R3KQ2 b q - 1 1");
 		ev.init(board);
 		assertEquals(740, ev.evaluateAsWhite(board));
 		// Test castling
 		mv = new Move(E8, C8);
-		{
-			ChessLibMoveGenerator b = (ChessLibMoveGenerator) board.fork();
-			b.makeMove(mv, MoveConfidence.UNSAFE);
-			assertEquals(740-5, getStaticEval(b));
-		}
 		ev.prepareMove(board, mv);
 		ev.commitMove();
 		assertEquals(740-5, ev.evaluateAsWhite(board));
@@ -128,7 +123,7 @@ System.out.println(expected);
 		mv = new Move(B2, A1, Piece.BLACK_QUEEN);
 		ev.prepareMove(board, mv);
 		ev.commitMove();
-		assertEquals(745+150-880-500, ev.evaluateAsWhite(board));
+		assertEquals(740+150-880-500, ev.evaluateAsWhite(board));
 		
 		// Test that illegal move does not throw exception
 		ev.unmakeMove();

@@ -9,6 +9,6 @@ public interface ComposableEvaluator<M, B extends MoveGenerator<M>> extends Zero
 
 	@Override
 	default void prepareMove(B board, M move) {
-		throw new IllegalStateException("Prepare move is not implemented");
+		throw new UnsupportedOperationException("Prepare move is not implemented");
 	}
 }

@@ -1,7 +1,6 @@
 package com.fathzer.chess.utils.evaluators.utils;
 
-import static com.fathzer.chess.utils.Pieces.KING;
-import static com.fathzer.chess.utils.Pieces.ROOK;
+import static com.fathzer.chess.utils.Pieces.*;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -50,27 +49,24 @@ public abstract class AbstractPieceSquareTableEvaluator<M, B extends MoveGenerat
 	@Override
 	public void prepareMove(MoveData<M, B> moveData) {
 		final boolean isBlack = moveData.getMovingPiece()<0;
-		int moving = Math.abs(moveData.getMovingPiece());
+		int pieceType = Math.abs(moveData.getMovingPiece());
 		final int movingIndex = moveData.getMovingIndex();
 		int inc = 0;
-		if (moving==KING) {
-			// Be cautious with castling
-			int rookIndex = moveData.getCastlingRookIndex();
-			if (rookIndex>=0) {
-				// It's a castling move, update rook positions values
-				inc = getPositionValue(ROOK, isBlack, moveData.getCastlingRookDestinationIndex()) - getPositionValue(ROOK, isBlack, rookIndex);
-			}
+		final int rookIndex = moveData.getCastlingRookIndex();
+		if (rookIndex>=0) {
+			// It's a castling move, update rook positions values
+			inc = getPositionValue(ROOK, isBlack, moveData.getCastlingRookDestinationIndex()) - getPositionValue(ROOK, isBlack, rookIndex);
 		}
 		// Remove the old position value of the moving piece
-		inc -= getPositionValue(moving, isBlack, movingIndex);
+		inc -= getPositionValue(pieceType, isBlack, movingIndex);
 		final int promoType = moveData.getPromotionType();
 		if (promoType!=0) {
 			// If promotion, update the moving piece
-			moving = promoType;
+			pieceType = promoType;
 		}
-		// Adds the new position value of the 
-		inc += getPositionValue(moving, isBlack, moveData.getMovingDestination());
-		int captured = moveData.getCapturedType();
+		// Adds the value of the new position of the piece 
+		inc += getPositionValue(pieceType, isBlack, moveData.getMovingDestination());
+		final int captured = moveData.getCapturedType();
 		if (captured!=0) {
 			// If the move is a capture add its position value
 			inc -= getPositionValue(captured, !isBlack, moveData.getCapturedIndex());

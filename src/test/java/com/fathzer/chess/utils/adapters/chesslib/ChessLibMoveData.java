@@ -1,104 +1,103 @@
 package com.fathzer.chess.utils.adapters.chesslib;
 
-import static com.github.bhlangonijr.chesslib.PieceType.*;
 import static com.github.bhlangonijr.chesslib.CastleRight.*;
 
+import static com.fathzer.chess.utils.Pieces.*;
+
 import com.fathzer.chess.utils.adapters.MoveData;
-import com.github.bhlangonijr.chesslib.Piece;
-import com.github.bhlangonijr.chesslib.PieceType;
+
 import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.game.GameContext;
 import com.github.bhlangonijr.chesslib.move.Move;
 
 public class ChessLibMoveData implements MoveData<Move, ChessLibMoveGenerator> {
-	private Square movingIndex;
-	private Piece movingPiece;
-	private Square movingDestination;
-	private Square capturedIndex;
-	private PieceType captured;
-	private PieceType promotion;
-	private Square castlingRookIndex;
-	private Square castlingRookDestinationIndex;
+	private int movingIndex;
+	private int movingPiece;
+	private int movingDestination;
+	private int capturedIndex;
+	private int capturedType;
+	private int promotionType;
+	private int castlingRookIndex;
+	private int castlingRookDestinationIndex;
 
 	@Override
 	public int getMovingIndex() {
-		return getIndex(movingIndex);
+		return movingIndex;
 	}
 
 	@Override
 	public int getMovingPiece() {
-		return ChessLibBoardExplorer.toPiece(movingPiece);
+		return movingPiece;
 	}
 
 	@Override
 	public int getMovingDestination() {
-		return getIndex(movingDestination);
+		return movingDestination;
 	}
 
 	@Override
 	public int getCapturedType() {
-		return ChessLibBoardExplorer.fromPieceType(captured);
+		return capturedType;
 	}
 
 	@Override
 	public int getCapturedIndex() {
-		return getIndex(capturedIndex);
+		return capturedIndex;
 	}
 
 	@Override
 	public int getPromotionType() {
-		return ChessLibBoardExplorer.fromPieceType(promotion);
+		return promotionType;
 	}
 
 	@Override
 	public int getCastlingRookIndex() {
-		return castlingRookIndex==null ? -1 : getIndex(castlingRookIndex);
+		return castlingRookIndex;
 	}
 
 	@Override
 	public int getCastlingRookDestinationIndex() {
-		return getIndex(castlingRookDestinationIndex);
+		return castlingRookDestinationIndex;
 	}
 
 	@Override
 	public boolean update(Move move, ChessLibMoveGenerator board) {
-		this.movingIndex = move.getFrom();
-		this.movingPiece = board.getBoard().getPiece(movingIndex);
-		PieceType movingType = movingPiece.getPieceType();
-		if (movingType==null) {
+		this.movingIndex = getIndex(move.getFrom());
+		this.movingPiece = ChessLibBoardExplorer.toPiece(board.getBoard().getPiece(move.getFrom()));
+		int movingType = Math.abs(movingPiece);
+		if (movingType==0) {
 			return false;
 		} else if (movingType==KING) {
-			this.promotion = null;
+			this.promotionType = 0;
 			final GameContext context = board.getBoard().getContext();
 			if (context.isCastleMove(move)) {
 				final Side side = board.getBoard().getSideToMove();
-				this.captured = null;
-				this.movingDestination = move.getTo();
-				final Move rookMove = context.getRookCastleMove(side, context.isKingSideCastle(move) ? KING_SIDE :
-                    QUEEN_SIDE);
-				this.castlingRookIndex = rookMove.getFrom();
-				this.castlingRookDestinationIndex = rookMove.getTo();
+				this.capturedType = 0;
+				this.movingDestination = getIndex(move.getTo());
+				final Move rookMove = context.getRookCastleMove(side, context.isKingSideCastle(move) ? KING_SIDE : QUEEN_SIDE);
+				this.castlingRookIndex = getIndex(rookMove.getFrom());
+				this.castlingRookDestinationIndex = getIndex(rookMove.getTo());
 			} else {
-				this.castlingRookIndex = null;
-				this.movingDestination = move.getTo();
-				this.captured = board.getBoard().getPiece(movingDestination).getPieceType();
-				if (this.captured!=null) {
+				this.castlingRookIndex = -1;
+				this.movingDestination = getIndex(move.getTo());
+				this.capturedType = ChessLibBoardExplorer.fromPieceType(board.getBoard().getPiece(move.getTo()).getPieceType());
+				if (this.capturedType!=0) {
 					this.capturedIndex = this.movingDestination;
 				}
 			}
 		} else {
 			// Not a king move => no castling
-			this.castlingRookIndex=null;
-			this.movingDestination = move.getTo();
-			if (movingType==PAWN && movingDestination==board.getBoard().getEnPassant()) {
-				this.captured = PAWN;
-				this.capturedIndex = board.getBoard().getEnPassantTarget();
-				this.promotion = null;
+			this.castlingRookIndex=-1;
+			this.movingDestination = getIndex(move.getTo());
+			if (movingType==PAWN && move.getTo()==board.getBoard().getEnPassant()) {
+				this.capturedType = PAWN;
+				this.capturedIndex = getIndex(board.getBoard().getEnPassantTarget());
+				this.promotionType = 0;
 			} else {
-				this.promotion = move.getPromotion().getPieceType();
-				this.captured = board.getBoard().getPiece(movingDestination).getPieceType();
-				if (this.captured!=null) {
+				this.promotionType = ChessLibBoardExplorer.fromPieceType(move.getPromotion().getPieceType());
+				this.capturedType = ChessLibBoardExplorer.fromPieceType(board.getBoard().getPiece(move.getTo()).getPieceType());
+				if (this.capturedType!=0) {
 					this.capturedIndex = this.movingDestination;
 				}
 			}
