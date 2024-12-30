@@ -42,13 +42,6 @@ public abstract class AbstractPieceSquareTable {
 	 * @return an integer
 	 */
 	public final int get(int pieceType, boolean black, int index) {
-		if (black) {
-			final int row = 7 - index/8;
-			final int col = index%8;
-			index = row*8 + col;
-			return -get(pieceType, index);
-		} else {
-			return get(pieceType, index);
-		}
+		return black ? -get(pieceType, index^56) : get(pieceType, index);
 	}
 }
