@@ -1,89 +1,81 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
-import java.util.function.Supplier;
+import static com.fathzer.chess.utils.Pieces.KING;
 
-import com.fathzer.chess.utils.adapters.MoveData;
+import com.fathzer.chess.utils.evaluators.utils.AbstractChessEvaluator;
+import com.fathzer.chess.utils.evaluators.utils.AbstractPieceSquareTable;
 import com.fathzer.games.MoveGenerator;
-import com.fathzer.games.ai.evaluation.Evaluator;
-import com.fathzer.games.ai.evaluation.ZeroSumEvaluator;
-import com.fathzer.games.util.Stack;
 
 /** An incremental implementation of the simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
- * <br>This only works with 8*8 games and exactly one king per Color.
+ * <br>It only works with 8*8 games and exactly one king per Color.
  */
-public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends SimplifiedEvaluatorBase<M, B> implements ZeroSumEvaluator<M,B>, Supplier<MoveData<M,B>> {
-	private final Stack<IncrementalState> states;
-	private IncrementalState toCommit;
-	private MoveData<M, B> moveData;
+public abstract class AbstractIncrementalSimplifiedEvaluator <M, B extends MoveGenerator<M>> extends AbstractChessEvaluator<M, B, SimplifiedState> {
+	private static final AbstractPieceSquareTable POS_TABLE = new PiecesOnlySquareTable();
+	private static final AbstractPieceSquareTable MIDDLE_GAME_KING_TABLE = new KingSquareTable();
+	private static final AbstractPieceSquareTable END_GAME_KING_TABLE = new EndGameKingSquareTable();
 	
-	/** Default constructor
+	/** Constructor
 	 */
 	protected AbstractIncrementalSimplifiedEvaluator() {
-		this.states = new Stack<>(IncrementalState::new);
-		this.moveData = get();
+		super(SimplifiedState::new);
 	}
 	
 	/** Constructor.
-	 * @param state The state to initialize the evaluator
+	 * @param state The initial state of the evaluator.
 	 */
-	protected AbstractIncrementalSimplifiedEvaluator(IncrementalState state) {
-		this();
-		IncrementalState other = new IncrementalState();
-		state.copyTo(other);
-		states.set(state);
+	protected AbstractIncrementalSimplifiedEvaluator(SimplifiedState state) {
+		super(SimplifiedState::new, state);
 	}
 
-
 	@Override
-	public Evaluator<M, B> fork() {
-		return fork(states.get());
+	protected void clear(SimplifiedState state) {
+		state.points = 0;
 	}
 	
-	/** Creates a new instance initialized with current state that will become the initial state of created instance.
-	 * @param state The initial state.
-	 * @return a new evaluator of the same class as this, from the same view point, and initialized with the state.
-	 */
-	protected abstract AbstractIncrementalSimplifiedEvaluator<M, B> fork(IncrementalState state);
-
 	@Override
-	public void init(B board) {
-		states.clear();
-		states.set(new IncrementalState(getExplorer(board)));
+	protected void copy(SimplifiedState from, SimplifiedState to) {
+		from.copyTo(to);
 	}
 
 	@Override
-	public void prepareMove(B board, M move) {
-		if (moveData.update(move, board)) {
-			buildToCommit();
-			toCommit.update(moveData);
+	protected void put(int pieceType, boolean isBlack, int to) {
+		add(pieceType, isBlack, to);
+		updateKingPositions(pieceType, isBlack, to);
+	}
+
+	@Override
+	protected void add(int pieceType, boolean isBlack, int to) {
+		toCommit.points += POS_TABLE.get(pieceType, isBlack, to);
+		toCommit.add(isBlack ? -pieceType : pieceType);
+	}
+
+	@Override
+	protected void move(int pieceType, boolean isBlack, int from, int to) {
+		toCommit.points -= POS_TABLE.get(pieceType, isBlack, from);
+		toCommit.points += POS_TABLE.get(pieceType, isBlack, to);
+		updateKingPositions(pieceType, isBlack, to);
+	}
+
+	@Override
+	protected void remove(int pieceType, boolean isBlack, int from) {
+		toCommit.points -= POS_TABLE.get(pieceType, isBlack, from);
+		toCommit.remove(isBlack ? -pieceType : pieceType);
+	}
+
+	private void updateKingPositions(int pieceType, boolean isBlack, int to) {
+		if (pieceType==KING) {
+			if (isBlack) {
+				toCommit.blackKingIndex = to;
+			} else {
+				toCommit.whiteKingIndex = to;
+			}			
 		}
-	}
-	
-	private void buildToCommit() {
-		final IncrementalState current = states.get();
-		states.next();
-		toCommit = states.get();
-		states.previous();
-		current.copyTo(toCommit);
-	}
-
-	@Override
-	public void commitMove() {
-		states.next();
-		states.set(toCommit);
-	}
-
-	@Override
-	public void unmakeMove() {
-		states.previous();
 	}
 
 	@Override
 	public int evaluateAsWhite(B board) {
-		return states.get().evaluateAsWhite();
-	}
-	
-	IncrementalState getState() {
-		return states.get();
+		final SimplifiedState state = getState();
+		final AbstractPieceSquareTable kingsTable = state.isEndGamePhase() ? END_GAME_KING_TABLE : MIDDLE_GAME_KING_TABLE;
+		return state.points + kingsTable.get(KING, false, state.whiteKingIndex) + kingsTable.get(KING, true, state.blackKingIndex);
 	}
 }

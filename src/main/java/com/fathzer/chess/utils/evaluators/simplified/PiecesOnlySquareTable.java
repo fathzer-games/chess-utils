@@ -1,9 +1,8 @@
-package com.fathzer.chess.utils.evaluators.simplified.two;
+package com.fathzer.chess.utils.evaluators.simplified;
 
-import com.fathzer.chess.utils.evaluators.utils.AbstractPieceSquareTableEvaluator;
-import com.fathzer.games.MoveGenerator;
+import com.fathzer.chess.utils.evaluators.utils.AbstractPieceSquareTable;
 
-public abstract class PiecesOnlySquareTable<M, B extends MoveGenerator<M>> extends AbstractPieceSquareTableEvaluator<M, B> {
+class PiecesOnlySquareTable extends AbstractPieceSquareTable {
 	private static final int[] PIECE_VALUES = {0, 100, 320, 330, 500, 900, 20000};
 	private static final int [][] PIECE_POSITION_VALUES = new int[][] {
 		// Just to have index equals to piece type codes
@@ -58,7 +57,7 @@ public abstract class PiecesOnlySquareTable<M, B extends MoveGenerator<M>> exten
 			-10,  5,  5,  5,  5,  5,  0,-10,
 			-10,  0,  5,  0,  0,  0,  0,-10,
 			-20,-10,-10, -5, -5,-10,-10,-20},
-		// KING
+		// Middle game KING (end game King's position is evaluated in KingSquareTable)
 		new int[] {
 			  0,  0,  0,  0,  0,  0,  0,  0,
 			  0,  0,  0,  0,  0,  0,  0,  0,
@@ -76,12 +75,8 @@ public abstract class PiecesOnlySquareTable<M, B extends MoveGenerator<M>> exten
 		}
 	}
 	
-	protected PiecesOnlySquareTable() {
+	public PiecesOnlySquareTable() {
 		super();
-	}
-
-	protected PiecesOnlySquareTable(int eval) {
-		super(eval);
 	}
 
 	private static void add(int[] array, int value) {
@@ -91,7 +86,7 @@ public abstract class PiecesOnlySquareTable<M, B extends MoveGenerator<M>> exten
 	}
 
 	@Override
-	protected int getPositionValue(int piece, int index) {
+	protected int get(int piece, int index) {
 		return PIECE_POSITION_VALUES[piece][index];
 	}
 }

@@ -16,7 +16,7 @@ import com.fathzer.games.util.Stack;
  */
 public abstract class AbstractPieceSquareTableEvaluator<M, B extends MoveGenerator<M>> implements ComposableEvaluator<M,B>, BoardExplorerBuilder<B> {
 	
-	private final Stack<AtomicInteger> states; //TODO implement something lighter
+	private final Stack<AtomicInteger> states; //TODO Maybe implement something lighter (no need of an atomic integer)
 	private int toCommit;
 	
 	protected AbstractPieceSquareTableEvaluator() {
