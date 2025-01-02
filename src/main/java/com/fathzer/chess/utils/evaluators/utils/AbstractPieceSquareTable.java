@@ -45,6 +45,14 @@ public abstract class AbstractPieceSquareTable {
 		return black ? -get(pieceType, index^56) : get(pieceType, index);
 	}
 	
+	/** Adds a piece specific constants to every values in a piece square table represented as an array.
+	 * <br>The typical usage is to add the raw centi pawn value of every piece to every value of this piece square table.
+	 * <br>It helps to make the code clean (The positions value can be defined independently of the piece value) but fast
+	 * (adding the raw values to the table in a static initializer prevent from adding the managing the pieces raw values
+	 * separately from the positions evaluation).
+	 * @param pieceSquareTable The piece square table as an array. Every element is the array for a piece index.
+	 * @param pieceValues The array of piece raw values in the same order as the elements of {@code pieceSquareTable}.
+	 */
 	protected static void addPiecesValues(int[][] pieceSquareTable, int[] pieceValues) {
 		for (int i = 0; i < pieceValues.length; i++) {
 			add(pieceSquareTable[i], pieceValues[i]);
