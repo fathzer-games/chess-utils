@@ -57,7 +57,7 @@ class PiecesOnlySquareTable extends AbstractPieceSquareTable {
 			-10,  5,  5,  5,  5,  5,  0,-10,
 			-10,  0,  5,  0,  0,  0,  0,-10,
 			-20,-10,-10, -5, -5,-10,-10,-20},
-		// Middle game KING (end game King's position is evaluated in KingSquareTable)
+		// Empty table for KING (King position is evaluated in KingSquareTable)
 		new int[] {
 			  0,  0,  0,  0,  0,  0,  0,  0,
 			  0,  0,  0,  0,  0,  0,  0,  0,
@@ -70,19 +70,11 @@ class PiecesOnlySquareTable extends AbstractPieceSquareTable {
 	}};
 	
 	static {
-		for (int i = 0; i < PIECE_VALUES.length; i++) {
-			add(PIECE_POSITION_VALUES[i], PIECE_VALUES[i]);
-		}
+		addPiecesValues(PIECE_POSITION_VALUES, PIECE_VALUES);
 	}
 	
 	public PiecesOnlySquareTable() {
 		super();
-	}
-
-	private static void add(int[] array, int value) {
-		for (int i = 0; i < array.length; i++) {
-			array[i] = array[i]+value;
-		}
 	}
 
 	@Override

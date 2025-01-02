@@ -9,7 +9,7 @@ import com.fathzer.games.MoveGenerator;
 /** An incremental implementation of the simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
  * <br>It only works with 8*8 games and exactly one king per Color.
  */
-public abstract class AbstractIncrementalSimplifiedEvaluator <M, B extends MoveGenerator<M>> extends AbstractChessEvaluator<M, B, SimplifiedState> {
+public abstract class AbstractIncrementalSimplifiedEvaluator<M, B extends MoveGenerator<M>> extends AbstractChessEvaluator<M, B, SimplifiedState> {
 	private static final AbstractPieceSquareTable POS_TABLE = new PiecesOnlySquareTable();
 	private static final AbstractPieceSquareTable MIDDLE_GAME_KING_TABLE = new KingSquareTable();
 	private static final AbstractPieceSquareTable END_GAME_KING_TABLE = new EndGameKingSquareTable();

@@ -44,4 +44,17 @@ public abstract class AbstractPieceSquareTable {
 	public final int get(int pieceType, boolean black, int index) {
 		return black ? -get(pieceType, index^56) : get(pieceType, index);
 	}
+	
+	protected static void addPiecesValues(int[][] pieceSquareTable, int[] pieceValues) {
+		for (int i = 0; i < pieceValues.length; i++) {
+			add(pieceSquareTable[i], pieceValues[i]);
+		}
+		
+	}
+	
+	private static void add(int[] array, int value) {
+		for (int i = 0; i < array.length; i++) {
+			array[i] = array[i]+value;
+		}
+	}
 }
