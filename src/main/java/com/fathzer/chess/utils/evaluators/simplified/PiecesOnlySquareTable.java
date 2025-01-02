@@ -1,6 +1,6 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
-import com.fathzer.chess.utils.evaluators.utils.AbstractPieceSquareTable;
+import com.fathzer.chess.utils.evaluators.AbstractPieceSquareTable;
 
 class PiecesOnlySquareTable extends AbstractPieceSquareTable {
 	private static final int[] PIECE_VALUES = {0, 100, 320, 330, 500, 900, 20000};

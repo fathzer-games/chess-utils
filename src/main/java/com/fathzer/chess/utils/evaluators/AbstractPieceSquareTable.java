@@ -1,4 +1,4 @@
-package com.fathzer.chess.utils.evaluators.utils;
+package com.fathzer.chess.utils.evaluators;
 
 import com.fathzer.chess.utils.Pieces;
 import com.fathzer.chess.utils.adapters.BoardExplorer;

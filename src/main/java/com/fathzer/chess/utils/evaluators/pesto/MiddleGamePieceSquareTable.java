@@ -1,6 +1,6 @@
 package com.fathzer.chess.utils.evaluators.pesto;
 
-import com.fathzer.chess.utils.evaluators.utils.AbstractPieceSquareTable;
+import com.fathzer.chess.utils.evaluators.AbstractPieceSquareTable;
 
 public class MiddleGamePieceSquareTable extends AbstractPieceSquareTable {
 	private static final int[] PIECE_VALUES = { 0, 82, 337, 365, 477, 1025,  0};

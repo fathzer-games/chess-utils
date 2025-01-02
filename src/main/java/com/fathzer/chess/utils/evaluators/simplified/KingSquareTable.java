@@ -1,6 +1,6 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
-import com.fathzer.chess.utils.evaluators.utils.AbstractPieceSquareTable;
+import com.fathzer.chess.utils.evaluators.AbstractPieceSquareTable;
 
 class KingSquareTable extends AbstractPieceSquareTable {
 	private static final int[] EVAL = new int[] {

@@ -1,7 +1,7 @@
 package com.fathzer.chess.utils.evaluators.pesto;
 
-import com.fathzer.chess.utils.evaluators.utils.AbstractChessEvaluator;
-import com.fathzer.chess.utils.evaluators.utils.AbstractPieceSquareTable;
+import com.fathzer.chess.utils.evaluators.AbstractChessEvaluator;
+import com.fathzer.chess.utils.evaluators.AbstractPieceSquareTable;
 import com.fathzer.games.MoveGenerator;
 
 /** An incremental implementation of the PESTO evaluator described at <a href="https://www.chessprogramming.org/PeSTO%27s_Evaluation_Function">https://www.chessprogramming.org/PeSTO%27s_Evaluation_Function</a>

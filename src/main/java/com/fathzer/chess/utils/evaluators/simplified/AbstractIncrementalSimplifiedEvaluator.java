@@ -2,8 +2,8 @@ package com.fathzer.chess.utils.evaluators.simplified;
 
 import static com.fathzer.chess.utils.Pieces.KING;
 
-import com.fathzer.chess.utils.evaluators.utils.AbstractChessEvaluator;
-import com.fathzer.chess.utils.evaluators.utils.AbstractPieceSquareTable;
+import com.fathzer.chess.utils.evaluators.AbstractChessEvaluator;
+import com.fathzer.chess.utils.evaluators.AbstractPieceSquareTable;
 import com.fathzer.games.MoveGenerator;
 
 /** An incremental implementation of the simplified evaluator described at <a href="https://www.chessprogramming.org/Simplified_Evaluation_Function">https://www.chessprogramming.org/Simplified_Evaluation_Function</a>
