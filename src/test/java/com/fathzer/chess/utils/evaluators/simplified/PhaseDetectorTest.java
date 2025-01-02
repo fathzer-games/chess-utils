@@ -1,7 +1,5 @@
 package com.fathzer.chess.utils.evaluators.simplified;
 
-import static com.fathzer.chess.utils.evaluators.simplified.Phase.END_GAME;
-import static com.fathzer.chess.utils.evaluators.simplified.Phase.MIDDLE_GAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -15,25 +13,25 @@ class PhaseDetectorTest {
 	@Test	
 	void testStaticComputation() {	
 		// Queen + rook => middle game	
-		assertEquals(MIDDLE_GAME, getPhase("r2qk3/8/8/8/8/8/8/4K3 w q - 0 1"));	
+		assertFalse(isEndGamePhase("r2qk3/8/8/8/8/8/8/4K3 w q - 0 1"));	
 		// Queen + bishop vs two rooks => end game	
-		assertEquals(END_GAME, getPhase("3qk3/7b/8/8/8/8/8/R3K2R w - - 0 1"));	
+		assertTrue(isEndGamePhase("3qk3/7b/8/8/8/8/8/R3K2R w - - 0 1"));	
 		// 2 Queens => end game	
-		assertEquals(END_GAME, getPhase("3qk3/8/8/8/8/7Q/8/4K3 w - - 0 1"));
+		assertTrue(isEndGamePhase("3qk3/8/8/8/8/7Q/8/4K3 w - - 0 1"));
 		// No queen => end game
-		assertEquals(END_GAME, getPhase("rnb1kbnr/ppp1pppp/8/8/8/8/PPP1PPPP/RNB1KBNR w KQkq - 0 1"));
+		assertTrue(isEndGamePhase("rnb1kbnr/ppp1pppp/8/8/8/8/PPP1PPPP/RNB1KBNR w KQkq - 0 1"));
 		
 		// Black queen has 2 minor pieces 
-		assertEquals(MIDDLE_GAME, getPhase("3k1q2/b1n5/8/3P4/8/8/8/4K3 w - - 0 1"));	
+		assertFalse(isEndGamePhase("3k1q2/b1n5/8/3P4/8/8/8/4K3 w - - 0 1"));	
 	}	
 
-	private Phase getPhase(String fen) {	
+	private boolean isEndGamePhase(String fen) {	
 		final FastPhaseDetector pd = new FastPhaseDetector();	
 		final BoardExplorer explorer = new ChessLibBoardExplorer(FENUtils.from(fen).getBoard());	
 		do {	
 			final int p = explorer.getPiece();	
 			pd.add(p);	
 		} while (explorer.next());	
-		return pd.getPhase();	
+		return pd.isEndGamePhase();	
 	}	
 }

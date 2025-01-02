@@ -6,9 +6,6 @@ import java.util.function.IntFunction;
 
 import static com.github.bhlangonijr.chesslib.Square.*;
 
-import static com.fathzer.chess.utils.evaluators.simplified.Phase.END_GAME;
-import static com.fathzer.chess.utils.evaluators.simplified.Phase.MIDDLE_GAME;
-
 import org.junit.jupiter.api.Test;
 
 import com.fathzer.chess.test.utils.FENUtils;
@@ -28,7 +25,7 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 			super();
 		}
 
-		public MyEval(IncrementalState state) {
+		public MyEval(SimplifiedState state) {
 			super(state);
 		}
 
@@ -43,25 +40,14 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		}
 
 		@Override
-		protected AbstractIncrementalSimplifiedEvaluator<Move, ChessLibMoveGenerator> fork(IncrementalState state) {
+		protected AbstractIncrementalSimplifiedEvaluator<Move, ChessLibMoveGenerator> fork(SimplifiedState state) {
 			return new MyEval(state);
 		}
-	}
 
-	@Test
-	void testStaticPhaseDetector() {
-		// Queen + rook => middle game
-		assertEquals(MIDDLE_GAME, getPhase("r2qk3/8/8/8/8/8/8/4K3 w q - 0 1"));
-		// Queen + bishop vs two rooks => end game
-		assertEquals(END_GAME, getPhase("3qk3/7b/8/8/8/8/8/R3K2R w - - 0 1"));
-		// 2 Queens => end game
-		assertEquals(END_GAME, getPhase("3qk3/8/8/8/8/7Q/8/4K3 w - - 0 1"));
-	}
-	
-	private Phase getPhase(String fen) {
-		final AbstractIncrementalSimplifiedEvaluator<Move, ChessLibMoveGenerator> pd = new MyEval();
-		pd.init(FENUtils.from(fen));
-		return pd.getState().getPhase();
+		@Override
+		public SimplifiedState getState() {
+			return super.getState();
+		}
 	}
 
 	@Test
@@ -70,24 +56,24 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		MyEval ev = new MyEval();
 		ChessLibMoveGenerator board = FENUtils.from("3qk3/7P/8/8/8/N7/B4r2/4K3 w - - 0 1");
 		ev.init(board);
-		assertEquals(MIDDLE_GAME, ev.getState().getPhase());
+		assertFalse(ev.getState().isEndGamePhase());
 		int expected = 150+290+320-895-510;
 		assertEquals(expected, ev.evaluateAsWhite(board));
 		
 		MyEval forked = (MyEval) ev.fork();
 		ChessLibMoveGenerator forkedMg = (ChessLibMoveGenerator) board.fork();
-		assertEquals(MIDDLE_GAME, forked.getState().getPhase());
+		assertFalse(forked.getState().isEndGamePhase());
 		assertEquals(expected, forked.evaluateAsWhite(board));
 		
-		// Take black rook => END_GAME
+		// Take black rook => END_GAME phase
 		Move mv = new Move(E1, F2);
 		forked.prepareMove(forkedMg, mv);
 		assertTrue(forkedMg.makeMove(mv, MoveConfidence.UNSAFE));
 		forked.commitMove();
 		int forkedExpected1 = expected+510+30; // 30 points because black king has a 30 points position penalty in END_GAME phase
-		assertEquals(END_GAME, forked.getState().getPhase());
+		assertTrue(forked.getState().isEndGamePhase());
 		assertEquals(forkedExpected1, forked.evaluateAsWhite(forkedMg));
-		assertEquals(MIDDLE_GAME, ev.getState().getPhase()); // No side effect
+		assertFalse(ev.getState().isEndGamePhase()); // No side effect
 		assertEquals(expected, ev.evaluateAsWhite(board));
 		
 		// Make a stupid move with the queen :-)
@@ -96,9 +82,9 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		assertTrue(forkedMg.makeMove(mv, MoveConfidence.UNSAFE));
 		forked.commitMove();
 		int forkedExpected2 = forkedExpected1 - 5;
-		assertEquals(END_GAME, forked.getState().getPhase());
+		assertTrue(forked.getState().isEndGamePhase());
 		assertEquals(forkedExpected2, forked.evaluateAsWhite(forkedMg));
-		assertEquals(MIDDLE_GAME, ev.getState().getPhase()); // Still no side effect
+		assertFalse(ev.getState().isEndGamePhase()); // Still no side effect
 		
 		// A promotion to a queen :-) => come back to Middle game
 		mv = new Move(H7, H8, Piece.WHITE_QUEEN);
@@ -106,7 +92,7 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		assertTrue(forkedMg.makeMove(mv, MoveConfidence.UNSAFE));
 		forked.commitMove();
 		int forkedExpected3 = forkedExpected2 + 880 - 150 - 30; // Warning, we change again the phase => king's positions values changes
-		assertEquals(MIDDLE_GAME, forked.getState().getPhase());
+		assertFalse(forked.getState().isEndGamePhase());
 		assertEquals(forkedExpected3, forked.evaluateAsWhite(forkedMg));
 		
 		forked.unmakeMove();
@@ -120,7 +106,7 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 		board = FENUtils.from("4k2r/8/8/8/8/8/6p1/3QK2R b Kk - 0 1");
 		ev.init(board);
 		assertEquals(745, ev.evaluateAsWhite(board));
-		assertEquals(MIDDLE_GAME, ev.getState().getPhase());
+		assertFalse(ev.getState().isEndGamePhase());
 		// Test castling
 		mv = new Move(E8, G8);
 		ev.prepareMove(board, mv);
@@ -161,7 +147,7 @@ class AbstractIncrementalSimplifiedEvaluatorTest {
 	}
 	
 	private void testVerticalSymetry(int pieceKind, String name) {	
-		testVerticalSymetry(name, i -> SimplifiedEvaluatorBase.getPositionValue(pieceKind, i));	
+		testVerticalSymetry(name, i -> new PiecesOnlySquareTable().get(pieceKind, i));	
 	}	
 
 	private void testVerticalSymetry(String wording, IntFunction<Integer> valueGetter) {	

@@ -9,7 +9,7 @@
 		<version>1.0.8</version>
 	</parent>
 	<artifactId>chess-utils</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 
 	<name>chess-utils</name>
 	<description>Some helpful piece of code to implement chess engines.</description>

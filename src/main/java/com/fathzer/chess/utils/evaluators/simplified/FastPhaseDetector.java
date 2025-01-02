@@ -30,16 +30,13 @@ class FastPhaseDetector {
 		state -= PIECE_KIND_TO_VALUES[piece + KING];
 	}
 	
-	Phase getPhase() {
+	boolean isEndGamePhase() {
 		final boolean whiteQueen = (state & WHITE_QUEEN_MASK) != 0L;
 		final boolean blackQueen = (state & BLACK_QUEEN_MASK) != 0L;
 		if (!blackQueen && !whiteQueen) {
-			return Phase.END_GAME;
+			return true;
 		}
-		if ((blackQueen && (hasBlackRook() || hasManyBlackMinor())) || (whiteQueen && (hasWhiteRook() || hasManyWhiteMinor()))) {
-			return Phase.MIDDLE_GAME;
-		}
-		return Phase.END_GAME;
+		return !((blackQueen && (hasBlackRook() || hasManyBlackMinor())) || (whiteQueen && (hasWhiteRook() || hasManyWhiteMinor())));
 	}
 	
 	boolean hasWhiteRook() {
