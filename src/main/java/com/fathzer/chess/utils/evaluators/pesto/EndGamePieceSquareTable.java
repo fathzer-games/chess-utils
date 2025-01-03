@@ -2,6 +2,8 @@ package com.fathzer.chess.utils.evaluators.pesto;
 
 import com.fathzer.chess.utils.evaluators.AbstractPieceSquareTable;
 
+/** The end game piece square table.
+ */
 public class EndGamePieceSquareTable extends AbstractPieceSquareTable {
 	private static final int[] PIECE_VALUES = { 0, 94, 281, 297, 512,  936,  0};
 
@@ -74,7 +76,8 @@ public class EndGamePieceSquareTable extends AbstractPieceSquareTable {
 		addPiecesValues(PIECE_POSITION_VALUES, PIECE_VALUES);
 	}
 	
-	
+	/** Constructor.
+	 */
 	public EndGamePieceSquareTable() {
 		super();
 	}
