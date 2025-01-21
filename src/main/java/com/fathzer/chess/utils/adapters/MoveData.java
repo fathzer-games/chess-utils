@@ -43,7 +43,7 @@ public interface MoveData<M, B> {
 	int getCastlingRookIndex();
 
 	/** Gets the destination index of the rook involved in castling.
-	 * <br>Calling this method when {@link #getCapturedType()} returns 0 may leads to unpredictable result.
+	 * <br>Calling this method when {@link #getCastlingRookIndex()} returns -1 may leads to unpredictable result.
 	 * @return The rook's destination index (see {@link BoardExplorer#getIndex()} to learn which index corresponds to which cell).
 	 */
 	int getCastlingRookDestinationIndex();
