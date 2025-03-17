@@ -115,15 +115,6 @@ public abstract class AbstractMoveDataTest<M, B> {
 		assertEquals(59, mv.getCastlingRookDestinationIndex());
 		
 		mg = toBoard("r2qk2r/1Ppb1ppp/4pn2/p2p4/3P1B2/4P3/P1Pb1PPP/RNQ1K2R w KQkq - 0 6");
-		// Basic king move (no castling, no capture)
-		assertTrue(mv.update(toMove(E1, D1, mg), mg));
-		assertEquals(KING, mv.getMovingPiece());
-		assertEquals(60, mv.getMovingIndex());
-		assertEquals(59, mv.getMovingDestination());
-		assertEquals(0, mv.getCapturedType());
-		assertEquals(0, mv.getPromotionType());
-		assertEquals(-1, mv.getCastlingRookIndex());
-		
 		// Capture by king
 		assertTrue(mv.update(toMove(E1, D2, mg), mg));
 		assertEquals(KING, mv.getMovingPiece());
@@ -131,6 +122,15 @@ public abstract class AbstractMoveDataTest<M, B> {
 		assertEquals(51, mv.getMovingDestination());
 		assertEquals(51, mv.getCapturedIndex());
 		assertEquals(3, mv.getCapturedType());
+		assertEquals(0, mv.getPromotionType());
+		assertEquals(-1, mv.getCastlingRookIndex());
+
+		// Basic king move (no castling, no capture)
+		assertTrue(mv.update(toMove(E1, D1, mg), mg));
+		assertEquals(KING, mv.getMovingPiece());
+		assertEquals(60, mv.getMovingIndex());
+		assertEquals(59, mv.getMovingDestination());
+		assertEquals(0, mv.getCapturedType());
 		assertEquals(0, mv.getPromotionType());
 		assertEquals(-1, mv.getCastlingRookIndex());
 	}

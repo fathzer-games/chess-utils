@@ -9,7 +9,7 @@
 		<version>1.0.8</version>
 	</parent>
 	<artifactId>chess-utils</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 
 	<name>chess-utils</name>
 	<description>Some helpful piece of code to implement chess engines.</description>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>com.fathzer</groupId>
 			<artifactId>games-core</artifactId>
-			<version>0.0.12-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 		<dependency>
 			<!-- This dependency is used to compile the com.fathzer.chess.utils.test package.
@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>com.github.bhlangonijr</groupId>
 			<artifactId>chesslib</artifactId>
-			<version>1.3.3</version>
+			<version>1.3.4</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
