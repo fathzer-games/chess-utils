@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.fathzer.games.MoveGenerator;
+import com.fathzer.chess.utils.model.IBoard;
 import com.fathzer.games.HashProvider;
 import com.fathzer.games.Status;
 import com.fathzer.games.util.MoveList;
@@ -12,7 +13,7 @@ import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.move.Move;
 
-public class ChessLibMoveGenerator implements MoveGenerator<Move>, HashProvider {
+public class ChessLibMoveGenerator implements MoveGenerator<Move>, HashProvider, IBoard<Move> {
 	private final Board board;
 	private Function<ChessLibMoveGenerator, SelectiveComparator<Move>> moveComparatorBuilder;
 	private SelectiveComparator<Move> comparator;
@@ -34,6 +35,11 @@ public class ChessLibMoveGenerator implements MoveGenerator<Move>, HashProvider 
 			// Can throw an exception if no piece is at move from cell
 			return false;
 		}
+	}
+
+	@Override
+	public boolean makeMove(Move move) {
+		return makeMove(move, MoveConfidence.PSEUDO_LEGAL);
 	}
 	
 	@Override
