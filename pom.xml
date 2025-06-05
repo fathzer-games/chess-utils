@@ -6,10 +6,10 @@
 	<parent>
 		<groupId>com.fathzer</groupId>
 		<artifactId>parent-pom</artifactId>
-		<version>1.0.8</version>
+		<version>1.0.9</version>
 	</parent>
 	<artifactId>chess-utils</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.1</version>
 
 	<name>chess-utils</name>
 	<description>Some helpful piece of code to implement chess engines.</description>
@@ -45,7 +45,7 @@
 			 But is not intended to be a transitive dependency => It is optional -->
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.10.2</version>
+			<version>5.12.2</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -57,7 +57,15 @@
 		<dependency>
 			<groupId>com.fathzer</groupId>
 			<artifactId>chess-test-utils</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>0.0.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!-- This dependency is added because chess-test-utils contains a dependency to junit-platform-suite:1.11.4
+			 which is not compatible with juit-jupiter 5.12.2 -->
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+			<version>1.12.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
