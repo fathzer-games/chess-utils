@@ -58,7 +58,7 @@ public abstract class AbstractBoardExplorerBuilderTest<B> {
 	}
 
 	private Map<Integer, Integer> toMap(BoardExplorer exp) {
-		final Map<Integer, Integer> result = new HashMap<Integer, Integer>();
+		final Map<Integer, Integer> result = new HashMap<>();
 		do {
 			result.put(exp.getIndex(), exp.getPiece());
 		} while (exp.next());

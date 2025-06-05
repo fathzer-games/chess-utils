@@ -29,7 +29,7 @@ public final class BasicMoveDecoder {
 		}
 	}
 	
-	public static int getPromotionType(ChessLibMoveGenerator board, Move move) {
+	public static int getPromotionType(Move move) {
 		return fromPieceType(move.getPromotion().getPieceType());
 	}
 	

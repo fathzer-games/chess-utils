@@ -33,7 +33,7 @@ class DefaultMoveComparatorTest {
 
 		@Override
 		public int getPromotionType(ChessLibMoveGenerator board, Move move) {
-			return BasicMoveDecoder.getPromotionType(board, move);
+			return BasicMoveDecoder.getPromotionType(move);
 		}
 	}
 
@@ -50,7 +50,6 @@ class DefaultMoveComparatorTest {
 		final Move pawnCatchPromo = new Move(E7, D8, Piece.WHITE_QUEEN);
 		
 		Move[] moves = new Move[] {pawnMove, queenQueenCatch, queenPawnCatch, kingCatch, pawnCatchPromo, pawnPromo};
-//		Arrays.stream(moves).map(m -> m.toString()+":"+cmp.evaluate(m)).forEach(System.out::println);
 		final MoveList<Move> sorted = new MoveList<>();
 		sorted.setComparator(cmp);
 		sorted.addAll(Arrays.asList(moves));

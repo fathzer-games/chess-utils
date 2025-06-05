@@ -32,6 +32,6 @@ public class ChessLibNaiveEvaluator extends AbstractNaiveEvaluator<Move, ChessLi
 
 	@Override
 	protected int getPromotionType(ChessLibMoveGenerator board, Move move) {
-		return BasicMoveDecoder.getPromotionType(board, move);
+		return BasicMoveDecoder.getPromotionType(move);
 	}
 }
